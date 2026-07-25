@@ -1,7 +1,11 @@
 from dotenv import load_dotenv
+from pathlib import Path
+
 import os
 
 load_dotenv()
+
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
@@ -27,15 +31,15 @@ REQUEST_TIMEOUT = 60
 # Project Directories
 # -----------------------------
 
-OUTPUT_DIR = "output"
+OUTPUT_DIR = BASE_DIR / "output"
 
-IMAGE_DIR = "output/images"
+LESSON_DIR = OUTPUT_DIR / "lessons"
 
-VOICE_DIR = "output/voice"
+IMAGE_DIR = OUTPUT_DIR / "images"
 
-VIDEO_DIR = "output/video"
+VOICE_DIR = OUTPUT_DIR / "voice"
 
-LESSON_DIR = "output/lessons"
+VIDEO_DIR = OUTPUT_DIR / "videos"
 
 # -----------------------------
 # Video Configuration

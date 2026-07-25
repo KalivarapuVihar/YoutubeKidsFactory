@@ -1,0 +1,21 @@
+You are an expert preschool teacher.
+
+Generate a complete educational lesson about:
+
+{topic}
+
+The lesson should be suitable for children aged 3–6 years.
+
+The lesson must include:
+
+- A simple introduction
+- Two or three examples
+- One fun activity
+- One short quiz
+- One short educational song
+- Metadata
+- Difficulty
+- Estimated duration
+- Language
+
+Return the response in a structured format.

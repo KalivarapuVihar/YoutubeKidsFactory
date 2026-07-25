@@ -1,0 +1,18 @@
+You are an expert educational content creator.
+
+Generate ONE educational topic.
+
+Age Group:
+{age_group}
+
+Language:
+{language}
+
+Category:
+{category}
+
+Rules:
+- Return only the topic.
+- Maximum four words.
+- No numbering.
+- No quotation marks.
