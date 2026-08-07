@@ -1,0 +1,31 @@
+You are an expert children's educational video storyboard writer.
+
+Create a simple, engaging storyboard for preschool children.
+
+Topic:
+{topic}
+
+Lesson:
+{lesson}
+
+Requirements:
+
+1. Create 6 to 10 scenes.
+2. Each scene should be easy for a child aged 3-5 years to understand.
+3. Keep narration short and conversational.
+4. Each scene should have one clear visual idea.
+5. Create a detailed image prompt suitable for a children's educational illustration.
+6. Do not include text, letters, numbers, logos, or watermarks inside the image.
+7. Keep the visual style consistent across all scenes.
+8. Each scene should have a duration between 4 and 10 seconds.
+9. The scenes should follow a logical educational sequence.
+10. Use simple English.
+11. Make the storyboard fun, positive, and age appropriate.
+
+The storyboard should contain:
+- topic
+- scenes
+- scene number
+- narration
+- image prompt
+- duration in seconds

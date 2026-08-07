@@ -2,10 +2,11 @@ from pathlib import Path
 
 from utils.file_manager import FileManager
 
+
 class PromptManager:
 
     PROMPTS_DIR = Path("prompts")
-    
+
     @classmethod
     def load_prompt(
         cls,
