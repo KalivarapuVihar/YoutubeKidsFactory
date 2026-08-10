@@ -2,6 +2,7 @@ from pathlib import Path
 import subprocess
 
 from utils.logger import logger
+from utils.asset_validator import AssetValidator
 
 
 class VideoRenderer:
@@ -63,10 +64,13 @@ class VideoRenderer:
                 error.stderr
             )
 
-            raise 
+            raise
 
     @staticmethod
-    def create_all_scene_videos(  run_directory: Path,scenes,) -> list[Path]:
+    def create_all_scene_videos(
+        run_directory: Path,
+        scenes,
+    ) -> list[Path]:
 
         images_directory = (
             run_directory / "images"
@@ -104,10 +108,13 @@ class VideoRenderer:
                 / f"scene_{scene.scene_number:02d}.mp4"
             )
 
-            if output_path.exists():
+            if AssetValidator.is_valid_media(
+                output_path
+            ):
 
                 logger.info(
-                    f"Skipping existing video: {output_path}"
+                    f"Skipping existing video: "
+                    f"{output_path}"
                 )
 
                 video_paths.append(
@@ -115,6 +122,15 @@ class VideoRenderer:
                 )
 
                 continue
+
+            if output_path.exists():
+
+                logger.warning(
+                    f"Existing video is invalid. "
+                    f"Regenerating: {output_path}"
+                )
+
+                output_path.unlink()
 
             VideoRenderer.create_scene_video(
                 image_path=image_path,
@@ -130,12 +146,13 @@ class VideoRenderer:
 
     @staticmethod
     def concatenate_videos(
-    video_paths: list[Path],
-    output_path: Path,
+        video_paths: list[Path],
+        output_path: Path,
     ) -> str:
 
         logger.info(
-            f"Concatenating {len(video_paths)} video segments."
+            f"Concatenating "
+            f"{len(video_paths)} video segments."
         )
 
         concat_file = (
@@ -149,6 +166,7 @@ class VideoRenderer:
         ) as file:
 
             for video_path in video_paths:
+
                 file.write(
                     f"file '{video_path.resolve()}'\n"
                 )
@@ -192,4 +210,4 @@ class VideoRenderer:
                 error.stderr
             )
 
-            raise  
+            raise

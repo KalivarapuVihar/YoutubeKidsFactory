@@ -3,17 +3,16 @@ from pathlib import Path
 from typing import Optional
 
 from config.settings import OUTPUT_DIR
-
+import json
 
 class RunManager:
 
     def __init__(
         self,
         topic: str,
-        run_directory: Optional[Path] = None,
-    ):
-
-        self.topic = topic
+        run_directory: Optional[Path] = None,  
+    ):  
+        self.topic = topic  
 
         if run_directory:
 
@@ -56,6 +55,9 @@ class RunManager:
         self.storyboard_path = (
             self.root / "storyboard.json"
         )
+        self.metadata_path = (
+            self.root / "metadata.json"
+        )
 
         self.final_video_path = (
             self.root / "final_video.mp4"
@@ -77,6 +79,69 @@ class RunManager:
             parents=True,
             exist_ok=True,
         )
+
+    def create_metadata(self):
+
+        if self.metadata_path.exists():
+            return
+
+        metadata = {
+            "topic": self.topic,
+            "status": "created",
+            "scenes": 0,
+            "created_at": datetime.now().isoformat(),
+            "updated_at": datetime.now().isoformat(),
+        }
+
+        with open(
+            self.metadata_path,
+            "w",
+            encoding="utf-8",
+        ) as file:
+
+            json.dump(
+                metadata,
+                file,
+                indent=4,
+            )
+
+
+    def update_metadata(self, **updates):
+
+        if self.metadata_path.exists():
+
+            with open(
+                self.metadata_path,
+                "r",
+                encoding="utf-8",
+            ) as file:
+
+                metadata = json.load(file)
+
+        else:
+
+            metadata = {
+                "topic": self.topic,
+                "created_at": datetime.now().isoformat(),
+            }
+
+        metadata.update(updates)
+
+        metadata["updated_at"] = (
+            datetime.now().isoformat()
+        )
+
+        with open(
+            self.metadata_path,
+            "w",
+            encoding="utf-8",
+        ) as file:
+
+            json.dump(
+                metadata,
+                file,
+                indent=4,
+            )
 
     @staticmethod
     def find_existing_run(

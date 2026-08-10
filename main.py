@@ -1,5 +1,3 @@
-import json
-
 from services.openai_service import OpenAIService
 from services.lesson_generator import LessonGenerator
 from services.storyboard_generator import StoryboardGenerator
@@ -7,13 +5,21 @@ from services.image_generator import ImageGenerator
 from services.voice_generator import VoiceGenerator
 from services.video_renderer import VideoRenderer
 
+
 from utils.run_manager import RunManager
 from utils.file_manager import FileManager
-
+from utils.asset_validator import AssetValidator
 
 def main():
 
-    topic = "Butterflies"
+    topic = input(
+    "Enter topic for the video: "
+    ).strip()
+
+    if not topic:
+        raise ValueError(
+        "Topic cannot be empty."
+    )
 
     # ---------------------------------
     # Create run
@@ -53,6 +59,7 @@ def main():
         )
 
     run.initialize()
+    run.create_metadata()
 
     print()
     print(f"Run directory: {run.root}")
@@ -114,9 +121,14 @@ def main():
             lesson.model_dump()
         )
 
+        run.update_metadata(
+                    status="lesson_completed",
+        )
+
         print(
             "Lesson generated successfully."
         )
+        
 
     # ---------------------------------
     # Storyboard
@@ -157,6 +169,11 @@ def main():
             storyboard.model_dump()
         )
 
+        run.update_metadata(
+            status="storyboard_completed",
+            scenes=len(storyboard.scenes),
+        )
+
         print(
             f"Storyboard generated with "
             f"{len(storyboard.scenes)} scenes."
@@ -186,17 +203,28 @@ def main():
 
         # Image
 
-        if image_path.exists():
+        if AssetValidator.is_valid_file(image_path):
 
             print(
-                f"Skipping image {scene_number}"
+                f"Skipping valid image {scene_number}"
             )
 
         else:
 
-            print(
-                f"Generating image {scene_number}..."
-            )
+            if image_path.exists():
+
+                print(
+                    f"Invalid image {scene_number}. "
+                    f"Regenerating..."
+                )
+
+                image_path.unlink()
+
+            else:
+
+                print(
+                    f"Generating image {scene_number}..."
+                )
 
             image_generator.generate(
                 scene=scene,
@@ -205,17 +233,28 @@ def main():
 
         # Voice
 
-        if voice_path.exists():
+        if AssetValidator.is_valid_media(voice_path):
 
             print(
-                f"Skipping voice {scene_number}"
+                f"Skipping valid voice {scene_number}"
             )
 
         else:
 
-            print(
-                f"Generating voice {scene_number}..."
-            )
+            if voice_path.exists():
+
+                print(
+                    f"Invalid voice {scene_number}. "
+                    f"Regenerating..."
+                )
+
+                voice_path.unlink()
+
+            else:
+
+                print(
+                    f"Generating voice {scene_number}..."
+                )
 
             voice_generator.generate(
                 scene=scene,
@@ -224,6 +263,10 @@ def main():
 
     print()
     print("All scene assets ready.")
+
+    run.update_metadata(
+        status="images_and_voice_completed"
+    )
 
     # ---------------------------------
     # Scene Videos
@@ -239,7 +282,9 @@ def main():
             scenes=storyboard.scenes,
         )
     )
-
+    run.update_metadata(
+        status="scene_videos_completed"
+    )
     print(
         f"Created {len(video_paths)} scene videos."
     )
@@ -255,6 +300,13 @@ def main():
             "Skipping concatenation."
         )
 
+        run.update_metadata(
+            status="completed",
+            final_video=str(
+                run.final_video_path
+            ),
+        )
+
     else:
 
         print()
@@ -267,6 +319,13 @@ def main():
 
         print(
             "Final video created successfully."
+        )
+
+        run.update_metadata(
+            status="completed",
+            final_video=str(
+                run.final_video_path
+            ),
         )
 
     print()
