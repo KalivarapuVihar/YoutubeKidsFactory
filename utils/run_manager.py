@@ -1,91 +1,151 @@
 from datetime import datetime
-from email.mime import text
-from importlib import metadata
 from pathlib import Path
-import re
+from typing import Optional
 
 from config.settings import OUTPUT_DIR
-from enums.run_status import RunStatus
-from models.run_metadata import RunMetadata
-from utils.file_manager import FileManager
 
 
 class RunManager:
 
-    @staticmethod
-    def _slugify(text: str) -> str:
+    def __init__(
+        self,
+        topic: str,
+        run_directory: Optional[Path] = None,
+    ):
 
-        text = text.lower()
+        self.topic = topic
 
-        text = re.sub(
-            r"[^a-z0-9]+",
-            "_",
-            text
-        )
+        if run_directory:
 
-        return text.strip("_")
-
-    @staticmethod
-    def _generate_run_id() -> str:
-
-        return datetime.now().strftime(
-        "%Y%m%d_%H%M%S"
-        )
-
-    @classmethod
-    def create_run(
-        cls,
-        topic: str
-    ) -> RunMetadata:
-        run_id = cls._generate_run_id()
-
-        slug = cls._slugify(topic)
-
-        folder_name = f"{run_id}_{slug}"
-
-        run_folder = OUTPUT_DIR / folder_name
-
-        FileManager.ensure_directory(run_folder)
-
-        for folder in [
-            "images",
-            "voice",
-            "video",
-            "thumbnail",
-        ]:
-            FileManager.ensure_directory(
-                run_folder / folder
+            self.root = Path(
+                run_directory
             )
-        now = datetime.now()
 
-        metadata = RunMetadata(
-            run_id=run_id,
-            topic=topic,
-            status=RunStatus.CREATED,
-            created_at=now,
-            updated_at=now,
+        else:
+
+            timestamp = datetime.now().strftime(
+                "%Y%m%d_%H%M%S"
+            )
+
+            safe_topic = (
+                topic.lower()
+                .replace(" ", "_")
+            )
+
+            self.root = (
+                OUTPUT_DIR
+                / f"{timestamp}_{safe_topic}"
+            )
+
+        self.images_dir = (
+            self.root / "images"
         )
 
-        FileManager.save_json(
-        run_folder / "metadata.json",
-        metadata.model_dump(
-                mode="json"
-            ),
-        )
-        return metadata
-
-    @classmethod
-    def get_run_directory(
-        cls,
-        metadata: RunMetadata,
-    ) -> Path:
-
-        slug = cls._slugify(
-            metadata.topic
+        self.voice_dir = (
+            self.root / "voice"
         )
 
-        folder_name = f"{metadata.run_id}_{slug}"
+        self.video_dir = (
+            self.root / "video"
+        )
 
-        return OUTPUT_DIR / folder_name
+        self.lesson_path = (
+            self.root / "lesson.json"
+        )
 
-        
+        self.storyboard_path = (
+            self.root / "storyboard.json"
+        )
+
+        self.final_video_path = (
+            self.root / "final_video.mp4"
+        )
+
+    def initialize(self):
+
+        self.images_dir.mkdir(
+            parents=True,
+            exist_ok=True,
+        )
+
+        self.voice_dir.mkdir(
+            parents=True,
+            exist_ok=True,
+        )
+
+        self.video_dir.mkdir(
+            parents=True,
+            exist_ok=True,
+        )
+
+    @staticmethod
+    def find_existing_run(
+        topic: str,
+    ):
+
+        safe_topic = (
+            topic.lower()
+            .replace(" ", "_")
+        )
+
+        pattern = (
+            f"*_{safe_topic}"
+        )
+
+        runs = sorted(
+            OUTPUT_DIR.glob(pattern),
+            reverse=True,
+        )
+
+        for run in runs:
+
+            if not run.is_dir():
+                continue
+
+            # Only consider a run resumable if
+            # it contains at least one pipeline artifact.
+
+            has_lesson = (
+                run / "lesson.json"
+            ).exists()
+
+            has_storyboard = (
+                run / "storyboard.json"
+            ).exists()
+
+            has_images = (
+                (run / "images").exists()
+                and any(
+                    (run / "images").iterdir()
+                )
+            )
+
+            has_voice = (
+                (run / "voice").exists()
+                and any(
+                    (run / "voice").iterdir()
+                )
+            )
+
+            has_video = (
+                (run / "video").exists()
+                and any(
+                    (run / "video").iterdir()
+                )
+            )
+
+            has_final_video = (
+                run / "final_video.mp4"
+            ).exists()
+
+            if (
+                has_lesson
+                or has_storyboard
+                or has_images
+                or has_voice
+                or has_video
+                or has_final_video
+            ):
+                return run
+
+        return None
