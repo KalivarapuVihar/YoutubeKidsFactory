@@ -27,6 +27,12 @@ MAX_RETRIES = 3
 
 REQUEST_TIMEOUT = 60
 
+IMAGE_MODEL = "gpt-image-1"
+
+VOICE_MODEL = "gpt-4o-mini-tts"
+
+VOICE_NAME = "alloy"
+
 # -----------------------------
 # Project Directories
 # -----------------------------
