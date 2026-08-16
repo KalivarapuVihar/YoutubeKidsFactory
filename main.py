@@ -1,10 +1,12 @@
+from pathlib import Path
 from services.openai_service import OpenAIService
 from services.lesson_generator import LessonGenerator
 from services.storyboard_generator import StoryboardGenerator
 from services.image_generator import ImageGenerator
 from services.voice_generator import VoiceGenerator
 from services.video_renderer import VideoRenderer
-
+from services.character_manager import CharacterManager
+from utils.caption_generator import CaptionGenerator
 
 from utils.run_manager import RunManager
 from utils.file_manager import FileManager
@@ -71,6 +73,10 @@ def main():
 
     ai_service = OpenAIService()
 
+    character_manager = CharacterManager(
+        Path("data/characters")
+    )
+
     lesson_generator = LessonGenerator(
         ai_service
     )
@@ -86,6 +92,7 @@ def main():
     voice_generator = VoiceGenerator(
         ai_service
     )
+    
 
     # ---------------------------------
     # Lesson
@@ -151,6 +158,9 @@ def main():
 
         storyboard = Storyboard.model_validate(
             storyboard_data
+        )
+        run.update_metadata(
+            scenes=len(storyboard.scenes),
         )
 
     else:
@@ -282,35 +292,101 @@ def main():
             scenes=storyboard.scenes,
         )
     )
+    # ---------------------------------
+    # Duration Tracking
+    # ---------------------------------
+
+    scene_durations = {}
+
+    for scene, video_path in zip(
+        storyboard.scenes,
+        video_paths,
+    ):
+
+        duration = AssetValidator.get_duration(
+            video_path
+        )
+
+        scene_durations[
+            str(scene.scene_number)
+        ] = round(
+            duration,
+            3
+        )
+
+    total_duration = round(
+        sum(scene_durations.values()),
+        3
+    )
+
+    # ---------------------------------
+    # Captions
+    # ---------------------------------
+
+    print()
+    print("Generating captions...")
+    print()
+
+    actual_scene_durations = [
+        scene_durations[
+            str(scene.scene_number)
+        ]
+        for scene in storyboard.scenes
+    ]
+
+    captions_path = (
+        run.root / "captions.srt"
+    )
+
+    CaptionGenerator.generate_srt(
+        scenes=storyboard.scenes,
+        scene_durations=actual_scene_durations,
+        output_path=captions_path,
+    )
+
+    print(
+        f"Captions created: {captions_path}"
+    )
+
+    run.update_metadata(
+        scene_durations=scene_durations,
+        total_duration=total_duration,
+    )
+
     run.update_metadata(
         status="scene_videos_completed"
-    )
-    print(
-        f"Created {len(video_paths)} scene videos."
     )
 
     # ---------------------------------
     # Final Video
     # ---------------------------------
 
-    if run.final_video_path.exists():
+    if AssetValidator.is_valid_video_with_audio(
+        run.final_video_path
+    ):
 
+        print()
         print(
-            "Final video already exists. "
+            "Valid final video already exists. "
             "Skipping concatenation."
-        )
-
-        run.update_metadata(
-            status="completed",
-            final_video=str(
-                run.final_video_path
-            ),
         )
 
     else:
 
-        print()
-        print("Creating final video...")
+        if run.final_video_path.exists():
+
+            print()
+            print(
+                "Invalid final video found. "
+                "Regenerating..."
+            )
+
+            run.final_video_path.unlink()
+
+        else:
+
+            print()
+            print("Creating final video...")
 
         VideoRenderer.concatenate_videos(
             video_paths=video_paths,
@@ -321,12 +397,51 @@ def main():
             "Final video created successfully."
         )
 
-        run.update_metadata(
-            status="completed",
-            final_video=str(
-                run.final_video_path
-            ),
-        )
+
+    # ---------------------------------
+    # Final Duration Validation
+    # ---------------------------------
+
+    final_duration = AssetValidator.get_duration(
+        run.final_video_path
+    )
+
+    duration_difference = round(
+        final_duration - total_duration,
+        3
+    )
+
+    run.update_metadata(
+        status="completed",
+        final_video=str(
+            run.final_video_path
+        ),
+        final_duration=round(
+            final_duration,
+            3
+        ),
+        total_duration=round(
+            total_duration,
+            3
+        ),
+        duration_difference=duration_difference,
+    )
+
+    print()
+    print(
+        f"Scene total duration: "
+        f"{total_duration:.3f} seconds"
+    )
+
+    print(
+        f"Final video duration: "
+        f"{final_duration:.3f} seconds"
+    )
+
+    print(
+        f"Duration difference: "
+        f"{duration_difference:.3f} seconds"
+    )
 
     print()
     print("=" * 50)

@@ -1,0 +1,51 @@
+{
+    "name": "Maya",
+    "role": "Main protagonist and audience anchor",
+    "species": "Human child",
+    "age": "5 years old",
+    "personality": [
+        "curious",
+        "cheerful",
+        "kind",
+        "brave",
+        "adventurous",
+        "imaginative"
+    ],
+    "appearance": [
+        "preschool-aged girl",
+        "rounded child-friendly proportions",
+        "large expressive eyes",
+        "warm friendly smile",
+        "dark distinctive hairstyle",
+        "Indian-inspired but globally appealing design"
+    ],
+    "clothing": [
+        "signature colorful outfit",
+        "subtle Indian-inspired pattern",
+        "small adventure backpack"
+    ],
+    "signature_features": [
+        "distinctive hairstyle",
+        "small adventure backpack",
+        "warm expressive face",
+        "recognizable colorful outfit"
+    ],
+    "voice_personality": "Bright, warm, curious and cheerful child voice",
+    "speech_style": "Simple, enthusiastic preschool-friendly English",
+    "catchphrase": "Let's find out!",
+    "likes": [
+        "exploring",
+        "asking questions",
+        "animals",
+        "nature",
+        "learning new things",
+        "adventures"
+    ],
+    "dislikes": [
+        "being unkind",
+        "giving up",
+        "leaving friends behind"
+    ],
+    "animation_style": "Expressive, energetic but gentle preschool animation with exaggerated facial reactions",
+    "character_prompt": "Maya is a 5-year-old Indian-inspired but globally appealing preschool girl character with rounded child-friendly proportions, large expressive eyes, a warm friendly smile, a distinctive dark hairstyle, a recognizable colorful signature outfit with a subtle Indian-inspired design detail, and a small adventure backpack. She is curious, cheerful, kind, brave, imaginative and adventurous. Keep her facial features, hairstyle, clothing, proportions, colors and overall character identity consistent across every scene."
+}

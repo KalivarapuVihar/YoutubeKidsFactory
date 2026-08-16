@@ -1,0 +1,334 @@
+    {
+    "title": "Maya's Missing Butterfly",
+    "topic": "Butterflies",
+    "target_age": "2-6 years",
+    "learning_objective": "Children learn the basic butterfly life cycle: egg, caterpillar, chrysalis, and butterfly.",
+    "recurring_phrase": "Let's find out!",
+    "characters": [
+        "Maya",
+        "Milo",
+        "Tia",
+        "Pip"
+    ],
+    "song_title": "Butterfly, Butterfly",
+    "song_lyrics": "Caterpillar crawls along, crawls along, crawls along! Then it rests inside its home, safe and cozy all alone! Wait, wait, wait... and out it comes — BUTTERFLY! Flap, flap, flap your wings, fly around and see new things! Crawl, rest, change and fly — that's how butterflies grow!",
+    "estimated_duration_seconds": 185,
+    "scenes": [
+        {
+            "scene_number": 1,
+            "duration_seconds": 10,
+            "location": "Wonderland Valley flower garden",
+            "characters": [
+                "Maya"
+            ],
+            "action": "Maya walks happily through the flower garden when a beautiful butterfly suddenly flies very close to her and across the camera.",
+            "emotion": "Surprised and delighted",
+            "dialogue": [
+                "Maya: Whoa! Look at that!"
+            ],
+            "narration": "",
+            "camera": "Wide garden shot followed by a quick push-in toward the butterfly, then follow the butterfly as it flies past Maya.",
+            "music": "Bright playful opening music with a magical sparkle.",
+            "sound_effects": [
+                "butterfly wing flutter",
+                "gentle whoosh",
+                "sparkle"
+            ],
+            "caption_text": "Whoa! Look at that!",
+            "image_prompt": "Maya, a 5-year-old Indian-inspired but globally appealing preschool girl with her consistent signature hairstyle, colorful outfit and small adventure backpack, walking through a bright magical flower garden in Wonderland Valley. A beautiful friendly butterfly suddenly flies very close to Maya and toward the camera. Maya looks surprised and delighted. Colorful preschool 3D animated style, soft rounded shapes, expressive face, cinematic children's animation, bright cheerful environment."
+        },
+        {
+            "scene_number": 2,
+            "duration_seconds": 12,
+            "location": "Wonderland Valley flower garden",
+            "characters": [
+                "Maya",
+                "Milo"
+            ],
+            "action": "Maya turns around looking for the butterfly. Milo hops into the scene and asks what happened.",
+            "emotion": "Curious and excited",
+            "dialogue": [
+                "Maya: Where did my butterfly go?",
+                "Milo: Are you looking for something?",
+                "Maya: My butterfly!",
+                "Milo: Let's find it!"
+            ],
+            "narration": "",
+            "camera": "Medium shot of Maya looking around, then pan toward Milo hopping into frame.",
+            "music": "Light playful adventure music.",
+            "sound_effects": [
+                "rabbit hop",
+                "soft footsteps"
+            ],
+            "caption_text": "Where did my butterfly go? Let's find it!",
+            "image_prompt": "Maya and Milo together in the colorful Wonderland Valley flower garden. Maya is looking around with a curious surprised expression while Milo, a small rounded rabbit with large expressive ears and his signature vest, hops beside her excitedly. Consistent character designs, preschool 3D animation, bright colorful environment, expressive faces."
+        },
+        {
+            "scene_number": 3,
+            "duration_seconds": 15,
+            "location": "Wonderland Valley flower garden",
+            "characters": [
+                "Maya",
+                "Milo"
+            ],
+            "action": "Maya and Milo search under flowers, behind leaves and around a tree for the missing butterfly.",
+            "emotion": "Curious and playful",
+            "dialogue": [
+                "Maya: Is it behind the flower?",
+                "Milo: Maybe it's behind the leaves!",
+                "Maya: Let's find out!"
+            ],
+            "narration": "",
+            "camera": "Quick playful cuts between the characters searching different parts of the garden.",
+            "music": "Bouncy search music.",
+            "sound_effects": [
+                "leaf rustle",
+                "soft footsteps",
+                "playful pop sounds"
+            ],
+            "caption_text": "Is it behind the flower? Let's find out!",
+            "image_prompt": "Maya and Milo playfully searching a colorful flower garden. Maya looks underneath a large flower while Milo searches behind big green leaves. Both have exaggerated curious expressions. Wonderland Valley, bright preschool 3D animation, rounded friendly shapes, consistent character designs, playful composition."
+        },
+        {
+            "scene_number": 4,
+            "duration_seconds": 13,
+            "location": "Wonderland Valley flower garden",
+            "characters": [
+                "Pip"
+            ],
+            "action": "Pip flies around calling for the butterfly, searches inside a watering can and accidentally gets a little water on his head.",
+            "emotion": "Silly and excited",
+            "dialogue": [
+                "Pip: Butterfly! Butterfly! Butterfly!",
+                "Pip: Is it in here?"
+            ],
+            "narration": "",
+            "camera": "Fast playful camera movement following Pip as he flies around the garden.",
+            "music": "Comedic playful music.",
+            "sound_effects": [
+                "bird flutter",
+                "watering can splash",
+                "comedic pop"
+            ],
+            "caption_text": "Butterfly! Butterfly! Butterfly!",
+            "image_prompt": "Pip, a tiny rounded colorful bird with large expressive eyes and his signature tiny cap, searching inside a bright watering can in Wonderland Valley. A small splash of water lands on Pip's head and Pip reacts with a hilarious surprised expression. Colorful preschool 3D animation, exaggerated comedy, consistent Pip character design."
+        },
+        {
+            "scene_number": 5,
+            "duration_seconds": 15,
+            "location": "Wonderland Valley flower garden",
+            "characters": [
+                "Maya",
+                "Milo",
+                "Tia",
+                "Pip"
+            ],
+            "action": "Tia notices something tiny moving on a leaf and calls everyone over.",
+            "emotion": "Curious and amazed",
+            "dialogue": [
+                "Tia: Wait... what's that?",
+                "Maya: What did you find?",
+                "Milo: I see something!"
+            ],
+            "narration": "",
+            "camera": "Slow push-in toward Tia looking at a leaf, then reveal the tiny caterpillar.",
+            "music": "Gentle discovery music.",
+            "sound_effects": [
+                "soft magical chime",
+                "leaf movement"
+            ],
+            "caption_text": "Wait... what's that?",
+            "image_prompt": "Tia, the warm brown bear with her signature scarf, carefully looking at a green leaf with a tiny friendly caterpillar on it. Maya, Milo and Pip gather around with curious amazed expressions. Wonderland Valley garden, warm sunlight, colorful preschool 3D animation, consistent characters."
+        },
+        {
+            "scene_number": 6,
+            "duration_seconds": 15,
+            "location": "Wonderland Valley flower garden",
+            "characters": [
+                "Maya",
+                "Milo",
+                "Tia",
+                "Pip"
+            ],
+            "action": "The friends realize the caterpillar is part of the butterfly's life cycle.",
+            "emotion": "Curious and excited",
+            "dialogue": [
+                "Maya: Is that our butterfly?",
+                "Tia: Not yet!",
+                "Milo: Not yet?",
+                "Tia: A butterfly starts life as a tiny egg, then it becomes a caterpillar."
+            ],
+            "narration": "",
+            "camera": "Medium group shot followed by close-up shots of the caterpillar and the characters reacting.",
+            "music": "Gentle educational music.",
+            "sound_effects": [
+                "soft pop",
+                "tiny sparkle"
+            ],
+            "caption_text": "A butterfly starts as an egg, then becomes a caterpillar.",
+            "image_prompt": "Maya, Milo, Tia and Pip gathered around a tiny friendly caterpillar on a green leaf. Tia gently explains the butterfly life cycle while the others listen with curious expressions. Preschool 3D animated style, colorful garden, consistent character appearances, warm educational atmosphere."
+        },
+        {
+            "scene_number": 7,
+            "duration_seconds": 28,
+            "location": "Magical Wonderland Valley garden",
+            "characters": [
+                "Maya",
+                "Milo",
+                "Tia",
+                "Pip"
+            ],
+            "action": "The four friends sing a short catchy song about the butterfly life cycle while simple visual representations of each stage appear around them.",
+            "emotion": "Happy and energetic",
+            "dialogue": [],
+            "narration": "",
+            "camera": "Wide musical shot with gentle camera movement and close-ups of each character singing.",
+            "music": "Original upbeat preschool song: Butterfly, Butterfly.",
+            "sound_effects": [
+                "gentle musical sparkle",
+                "soft claps"
+            ],
+            "caption_text": "EGG! CATERPILLAR! CHRYSALIS! BUTTERFLY!",
+            "image_prompt": "Maya, Milo, Tia and Pip happily singing together in a magical colorful Wonderland Valley garden. Friendly visual symbols of an egg, caterpillar, chrysalis and butterfly appear around them as they sing. Characters perform simple joyful dance movements. High-quality preschool 3D animation, colorful, expressive, musical children's show."
+        },
+        {
+            "scene_number": 8,
+            "duration_seconds": 15,
+            "location": "Wonderland Valley garden",
+            "characters": [
+                "Maya",
+                "Milo",
+                "Tia",
+                "Pip"
+            ],
+            "action": "The friends watch the butterfly life cycle visually transform from egg to caterpillar to chrysalis and finally toward a butterfly.",
+            "emotion": "Amazed and excited",
+            "dialogue": [
+                "Milo: Whoa!",
+                "Pip: Wow-wow-wow!"
+            ],
+            "narration": "",
+            "camera": "Close-up transformation sequence with a gentle circular camera movement.",
+            "music": "Magical rising music.",
+            "sound_effects": [
+                "magical sparkle",
+                "soft transformation sound",
+                "gentle chime"
+            ],
+            "caption_text": "Egg... Caterpillar... Chrysalis...",
+            "image_prompt": "Magical preschool animation showing the butterfly life cycle transformation from tiny egg to caterpillar to chrysalis, with Maya, Milo, Tia and Pip watching in amazement. Bright magical garden, colorful glowing transformation effects, child-friendly 3D animation, consistent characters."
+        },
+        {
+            "scene_number": 9,
+            "duration_seconds": 15,
+            "location": "Wonderland Valley flower garden",
+            "characters": [
+                "Maya",
+                "Milo",
+                "Tia",
+                "Pip"
+            ],
+            "action": "A beautiful butterfly emerges from the chrysalis and slowly opens its wings.",
+            "emotion": "Wonder and delight",
+            "dialogue": [
+                "Maya: It's beautiful!"
+            ],
+            "narration": "",
+            "camera": "Slow cinematic close-up of the butterfly emerging, then pull back to reveal the friends.",
+            "music": "Beautiful magical musical rise.",
+            "sound_effects": [
+                "gentle flutter",
+                "magical chime",
+                "soft sparkle"
+            ],
+            "caption_text": "It's beautiful!",
+            "image_prompt": "A beautiful colorful butterfly emerging from a chrysalis in the Wonderland Valley garden while Maya, Milo, Tia and Pip watch with amazed joyful expressions. Butterfly slowly opens its wings. Warm magical sunlight, beautiful flowers, cinematic preschool 3D animation, highly appealing children's show quality."
+        },
+        {
+            "scene_number": 10,
+            "duration_seconds": 17,
+            "location": "Wonderland Valley flower garden",
+            "characters": [
+                "Maya",
+                "Milo",
+                "Pip"
+            ],
+            "action": "The butterfly flies toward Maya and gently lands near her hand while the friends celebrate finding it.",
+            "emotion": "Joyful and heartwarming",
+            "dialogue": [
+                "Maya: We found you!",
+                "Milo: We found it!",
+                "Pip: Pip found you too!"
+            ],
+            "narration": "",
+            "camera": "Follow the butterfly through the air toward Maya, then close-up on Maya smiling.",
+            "music": "Warm happy music.",
+            "sound_effects": [
+                "butterfly flutter",
+                "happy sparkle",
+                "soft laugh"
+            ],
+            "caption_text": "We found you!",
+            "image_prompt": "Maya smiling warmly as a beautiful colorful butterfly gently lands near her hand. Milo celebrates beside her and Pip flutters happily nearby. Tia watches with a warm smile in the background. Wonderland Valley flower garden, warm golden light, emotional preschool 3D animation, consistent character designs."
+        },
+        {
+            "scene_number": 11,
+            "duration_seconds": 20,
+            "location": "Wonderland Valley flower garden",
+            "characters": [
+                "Maya",
+                "Milo",
+                "Tia",
+                "Pip"
+            ],
+            "action": "The friends ask the audience to remember the four stages of the butterfly life cycle and pause after each question.",
+            "emotion": "Interactive and cheerful",
+            "dialogue": [
+                "Maya: Can you remember how a butterfly grows?",
+                "Tia: First...",
+                "Milo: Then...",
+                "Pip: And then...",
+                "Everyone: Butterfly!"
+            ],
+            "narration": "",
+            "camera": "Front-facing group shot looking directly toward the audience with simple visual cards for each stage.",
+            "music": "Light interactive music with pauses for children to answer.",
+            "sound_effects": [
+                "soft pop for each stage",
+                "happy chime"
+            ],
+            "caption_text": "EGG! CATERPILLAR! CHRYSALIS! BUTTERFLY!",
+            "image_prompt": "Maya, Milo, Tia and Pip facing the camera in Wonderland Valley, smiling and inviting young viewers to participate. Four colorful child-friendly visual cards show egg, caterpillar, chrysalis and butterfly. Bright preschool 3D animation, direct audience interaction, expressive characters."
+        },
+        {
+            "scene_number": 12,
+            "duration_seconds": 10,
+            "location": "Wonderland Valley flower garden",
+            "characters": [
+                "Maya",
+                "Milo",
+                "Tia",
+                "Pip"
+            ],
+            "action": "The friends wave goodbye as the butterfly flies around them. They deliver the recurring phrase together.",
+            "emotion": "Happy and warm",
+            "dialogue": [
+                "Maya: Be curious!",
+                "Milo: Ask questions!",
+                "Tia: Keep learning!",
+                "Pip: Pip Pip!",
+                "Everyone: Let's find out!"
+            ],
+            "narration": "",
+            "camera": "Wide final shot slowly pulling back from the four friends and butterfly.",
+            "music": "Short cheerful Wonderland Valley theme.",
+            "sound_effects": [
+                "butterfly flutter",
+                "happy sparkle",
+                "gentle musical ending"
+            ],
+            "caption_text": "Be curious! Ask questions! Keep learning! Let's find out!",
+            "image_prompt": "Maya, Milo, Tia and Pip standing together in the beautiful Wonderland Valley flower garden, waving goodbye while a colorful butterfly flies around them. All four characters have joyful expressive faces. Bright warm sunset light, colorful flowers, polished preschool 3D animated series style, consistent character designs, heartwarming final shot."
+        }
+    ]
+}

@@ -2,6 +2,7 @@ from pathlib import Path
 
 from models.scene import Scene
 from services.openai_service import OpenAIService
+from services.character_manager import CharacterManager
 
 
 class ImageGenerator:
@@ -9,8 +10,10 @@ class ImageGenerator:
     def __init__(
         self,
         ai_service: OpenAIService,
+        character_manager: CharacterManager,
     ):
         self.ai_service = ai_service
+        self.character_manager = character_manager
 
     def generate(
         self,
@@ -18,7 +21,94 @@ class ImageGenerator:
         output_path: Path,
     ) -> str:
 
-        return self.ai_service.generate_image(
-            prompt=scene.image_prompt,
+        character_prompt = (
+            self.character_manager.build_character_prompt(
+                scene.characters
+            )
+        )
+
+        reference_paths = (
+            self.character_manager.get_reference_images(
+                scene.characters
+            )
+        )
+
+        enhanced_prompt = f"""
+Create a polished production-quality frame
+from a premium preschool animated series.
+
+CHARACTER CONSISTENCY REQUIREMENTS:
+
+{character_prompt}
+
+The supplied reference images are the canonical
+visual designs of the characters.
+
+Preserve their identity and visual appearance.
+
+Do not redesign, rename, recolor, replace,
+or merge the characters.
+
+Maintain:
+- facial features
+- hairstyle or fur
+- body proportions
+- skin/fur colors
+- clothing
+- accessories
+- species
+- character scale
+- overall 3D animation style
+
+SCENE:
+
+Location:
+{scene.location}
+
+Characters:
+{", ".join(scene.characters)}
+
+Action:
+{scene.action}
+
+Emotion:
+{scene.emotion}
+
+Camera:
+{scene.camera}
+
+Original Scene Prompt:
+{scene.image_prompt}
+
+VISUAL STYLE:
+
+High-quality preschool 3D animation.
+Bright vibrant colors.
+Soft rounded shapes.
+Warm cinematic lighting.
+Expressive child-friendly faces.
+Beautiful readable composition.
+Safe and appealing for children ages 2-6.
+
+Create a complete scene composition,
+not a character reference sheet.
+
+The characters should interact naturally
+with the environment and with each other.
+
+Avoid:
+- text
+- logos
+- watermarks
+- character duplication
+- extra limbs
+- distorted faces
+- unrelated characters
+- photorealism
+"""
+
+        return self.ai_service.generate_image_with_references(
+            prompt=enhanced_prompt,
+            reference_paths=reference_paths,
             output_path=output_path,
         )

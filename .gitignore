@@ -6,3 +6,9 @@ output/
 temp/
 logs/
 .pub
+# Google / YouTube credentials
+credentials/
+tokens/
+
+# Environment secrets
+.env

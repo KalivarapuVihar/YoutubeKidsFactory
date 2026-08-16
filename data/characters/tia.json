@@ -1,0 +1,53 @@
+{
+    "name": "Tia",
+    "role": "Kind problem solver and thoughtful friend",
+    "species": "Turtle",
+    "age": "Equivalent to 5-6 years old",
+    "personality": [
+        "kind",
+        "patient",
+        "smart",
+        "encouraging",
+        "observant",
+        "caring"
+    ],
+    "appearance": [
+        "soft rounded turtle design",
+        "light green skin",
+        "warm yellow-green shell",
+        "large expressive eyes",
+        "small friendly smile",
+        "rounded child-friendly proportions"
+    ],
+    "clothing": [
+        "large purple bow",
+        "round purple glasses",
+        "purple backpack"
+    ],
+    "signature_features": [
+        "green turtle body",
+        "yellow-green shell",
+        "large purple bow",
+        "round purple glasses",
+        "purple backpack",
+        "gentle expressive smile"
+    ],
+    "voice_personality": "Warm, calm, reassuring and friendly childlike voice",
+    "speech_style": "Clear, patient and encouraging preschool-friendly English",
+    "catchphrase": "Let's look carefully!",
+    "likes": [
+        "helping friends",
+        "solving problems",
+        "observing nature",
+        "learning",
+        "sharing knowledge",
+        "teamwork"
+    ],
+    "dislikes": [
+        "unkindness",
+        "giving up",
+        "leaving someone confused"
+    ],
+    "animation_style": "Gentle, expressive preschool 3D animation with calm gestures and thoughtful facial expressions",
+    "character_prompt": "Tia is a friendly young turtle character with a soft rounded child-friendly body, light green skin, a warm yellow-green shell, large expressive eyes, a gentle smile, a large purple bow, round purple glasses and a purple backpack. Tia is kind, patient, smart, observant, caring and encouraging. She moves calmly and thoughtfully. Keep Tia's green skin, yellow-green shell, purple bow, purple glasses, purple backpack, facial features, body proportions and overall character identity exactly consistent across every scene."
+}

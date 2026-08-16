@@ -1,5 +1,6 @@
+from typing import Type, TypeVar, List
+
 from openai import OpenAI
-from typing import TypeVar, Type
 from pydantic import BaseModel
 
 from config.settings import (
@@ -11,7 +12,12 @@ from config.settings import (
 )
 from utils.logger import logger
 
-T = TypeVar("T", bound=BaseModel)   
+
+T = TypeVar(
+    "T",
+    bound=BaseModel,
+)
+
 
 class OpenAIService:
 
@@ -19,18 +25,26 @@ class OpenAIService:
 
         if not OPENAI_API_KEY:
             raise ValueError(
-                "OPENAI_API_KEY is missing. Please check your .env file."
+                "OPENAI_API_KEY is missing. "
+                "Please check your .env file."
             )
 
         self.client = OpenAI(
             api_key=OPENAI_API_KEY
         )
 
-        logger.info("OpenAI client initialized.")
+        logger.info(
+            "OpenAI client initialized."
+        )
 
-    def generate_text(self, prompt: str) -> str:
+    def generate_text(
+        self,
+        prompt: str,
+    ) -> str:
 
-        logger.info("Sending request to OpenAI.")
+        logger.info(
+            "Sending request to OpenAI."
+        )
 
         try:
 
@@ -39,7 +53,9 @@ class OpenAIService:
                 input=prompt,
             )
 
-            logger.info("Response received successfully.")
+            logger.info(
+                "Response received successfully."
+            )
 
             return response.output_text
 
@@ -51,9 +67,15 @@ class OpenAIService:
 
             raise
 
-    def generate_structured(self,prompt: str,response_model: Type[T],) -> T:
+    def generate_structured(
+        self,
+        prompt: str,
+        response_model: Type[T],
+    ) -> T:
 
-        logger.info("Sending structured request to OpenAI.")
+        logger.info(
+            "Sending structured request to OpenAI."
+        )
 
         try:
 
@@ -63,7 +85,9 @@ class OpenAIService:
                 text_format=response_model,
             )
 
-            logger.info("Structured response received.")
+            logger.info(
+                "Structured response received."
+            )
 
             return response.output_parsed
 
@@ -74,8 +98,12 @@ class OpenAIService:
             )
 
             raise
-        
-    def generate_image(self,prompt: str,output_path) -> str:
+
+    def generate_image(
+        self,
+        prompt: str,
+        output_path,
+    ) -> str:
 
         logger.info(
             "Sending image generation request to OpenAI."
@@ -93,7 +121,8 @@ class OpenAIService:
 
             if not image_data.b64_json:
                 raise ValueError(
-                    "Image generation returned no image data."
+                    "Image generation returned "
+                    "no image data."
                 )
 
             import base64
@@ -102,11 +131,16 @@ class OpenAIService:
                 image_data.b64_json
             )
 
-            with open(output_path, "wb") as file:
+            with open(
+                output_path,
+                "wb",
+            ) as file:
+
                 file.write(image_bytes)
 
             logger.info(
-                f"Image saved successfully: {output_path}"
+                f"Image saved successfully: "
+                f"{output_path}"
             )
 
             return str(output_path)
@@ -119,10 +153,94 @@ class OpenAIService:
 
             raise
 
-    def generate_speech(self,text: str,output_path) -> str:
+    def generate_image_with_references(
+        self,
+        prompt: str,
+        reference_paths: List,
+        output_path,
+    ) -> str:
+
+        logger.info(
+            "Sending reference-based image "
+            "generation request to OpenAI."
+        )
+
+        reference_files = []
+
+        try:
+
+            for reference_path in reference_paths:
+
+                file = open(
+                    reference_path,
+                    "rb",
+                )
+
+                reference_files.append(
+                    file
+                )
+
+            response = self.client.images.edit(
+                model=IMAGE_MODEL,
+                image=reference_files,
+                prompt=prompt,
+                size="1536x1024",
+                quality="medium",
+                input_fidelity="high",
+            )
+
+            image_data = response.data[0]
+
+            if not image_data.b64_json:
+                raise ValueError(
+                    "Reference-based image generation "
+                    "returned no image data."
+                )
+
+            import base64
+
+            image_bytes = base64.b64decode(
+                image_data.b64_json
+            )
+
+            with open(
+                output_path,
+                "wb",
+            ) as file:
+
+                file.write(image_bytes)
+
+            logger.info(
+                "Reference-based image saved: "
+                f"{output_path}"
+            )
+
+            return str(output_path)
+
+        except Exception as error:
+
+            logger.exception(
+                "Reference-based image generation failed: "
+                f"{error}"
+            )
+
+            raise
+
+        finally:
+
+            for file in reference_files:
+
+                file.close()
+
+    def generate_speech(
+        self,
+        text: str,
+        output_path,
+    ) -> str:
+
         logger.info(
             "Sending text-to-speech request to OpenAI."
-        )   
+        )
 
         try:
 
@@ -137,7 +255,8 @@ class OpenAIService:
             )
 
             logger.info(
-                f"Voice file saved successfully: {output_path}"
+                f"Voice file saved successfully: "
+                f"{output_path}"
             )
 
             return str(output_path)

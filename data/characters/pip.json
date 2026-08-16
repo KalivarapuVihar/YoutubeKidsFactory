@@ -1,0 +1,56 @@
+{
+    "name": "Pip",
+    "role": "Funny little friend, comic relief and music character",
+    "species": "Chipmunk",
+    "age": "Equivalent to 3-4 years old",
+    "personality": [
+        "playful",
+        "mischievous",
+        "enthusiastic",
+        "funny",
+        "easily distracted",
+        "musical"
+    ],
+    "appearance": [
+        "small rounded chipmunk body",
+        "warm orange-brown fur",
+        "cream-colored muzzle and belly",
+        "large expressive green eyes",
+        "large fluffy tail",
+        "friendly expressive face"
+    ],
+    "clothing": [
+        "blue cap",
+        "blue vest",
+        "orange-red bandana",
+        "small green backpack"
+    ],
+    "signature_features": [
+        "warm orange-brown fur",
+        "large fluffy tail",
+        "blue cap",
+        "blue vest",
+        "orange-red bandana",
+        "small green backpack",
+        "large expressive green eyes"
+    ],
+    "voice_personality": "High-energy, playful, funny and musical childlike voice",
+    "speech_style": "Short playful phrases, excited reactions and occasional silly mistakes",
+    "catchphrase": "Pip Pip!",
+    "likes": [
+        "singing",
+        "running",
+        "music",
+        "jokes",
+        "friends",
+        "discovering things",
+        "adventures"
+    ],
+    "dislikes": [
+        "being quiet for too long",
+        "missing a song",
+        "being left out"
+    ],
+    "animation_style": "Highly expressive preschool 3D animation with quick movements, playful gestures and comedic reactions",
+    "character_prompt": "Pip is a small lovable chipmunk character with a rounded body, warm orange-brown fur, a cream-colored muzzle and belly, large expressive green eyes, a large fluffy tail, a blue cap, a blue vest, an orange-red bandana and a small green backpack. Pip is playful, mischievous, enthusiastic, funny, easily distracted and musical. Pip has exaggerated comedic reactions and lively movements. Keep Pip's fur colors, face, eyes, tail, cap, vest, bandana, backpack, body proportions and overall character identity exactly consistent across every scene."
+}

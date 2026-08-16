@@ -1,0 +1,48 @@
+{
+    "name": "Milo",
+    "role": "Energetic curious friend and source of excitement",
+    "species": "Rabbit",
+    "age": "Equivalent to 4-5 years old",
+    "personality": [
+        "energetic",
+        "curious",
+        "playful",
+        "impatient",
+        "enthusiastic",
+        "lovable"
+    ],
+    "appearance": [
+        "soft rounded rabbit design",
+        "large expressive ears",
+        "large expressive eyes",
+        "small rounded body",
+        "friendly face"
+    ],
+    "clothing": [
+        "signature little vest"
+    ],
+    "signature_features": [
+        "large expressive ears",
+        "signature vest",
+        "bouncy body language",
+        "highly expressive face"
+    ],
+    "voice_personality": "Energetic, playful and excited childlike voice",
+    "speech_style": "Short, enthusiastic sentences with lots of excitement",
+    "catchphrase": "Let's go!",
+    "likes": [
+        "jumping",
+        "exploring",
+        "games",
+        "discovering things",
+        "adventures",
+        "friends"
+    ],
+    "dislikes": [
+        "waiting too long",
+        "being bored",
+        "missing an adventure"
+    ],
+    "animation_style": "Bouncy, energetic preschool animation with hopping, jumping and exaggerated reactions",
+    "character_prompt": "Milo is a small lovable rabbit character with a soft rounded body, large expressive ears, large expressive eyes, a friendly face and a distinctive signature vest. Milo is energetic, curious, playful, impatient and enthusiastic. His movements are bouncy and lively. Keep his rabbit proportions, fur appearance, ears, vest, facial features and overall character identity consistent across every scene."
+}
