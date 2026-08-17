@@ -3,17 +3,39 @@ from pathlib import Path
 
 import os
 
+
 load_dotenv()
 
-BASE_DIR = Path(__file__).resolve().parent.parent
 
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+BASE_DIR = Path(
+    __file__
+).resolve().parent.parent
 
-YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY")
 
-YOUTUBE_CLIENT_ID = os.getenv("YOUTUBE_CLIENT_ID")
+# -----------------------------
+# Environment Configuration
+# -----------------------------
 
-YOUTUBE_CLIENT_SECRET = os.getenv("YOUTUBE_CLIENT_SECRET")
+OPENAI_API_KEY = os.getenv(
+    "OPENAI_API_KEY"
+)
+
+YOUTUBE_API_KEY = os.getenv(
+    "YOUTUBE_API_KEY"
+)
+
+YOUTUBE_CLIENT_ID = os.getenv(
+    "YOUTUBE_CLIENT_ID"
+)
+
+YOUTUBE_CLIENT_SECRET = os.getenv(
+    "YOUTUBE_CLIENT_SECRET"
+)
+
+YOUTUBE_GOOGLE_ACCOUNT = os.getenv(
+    "YOUTUBE_GOOGLE_ACCOUNT"
+)
+
 
 # -----------------------------
 # AI Configuration
@@ -33,19 +55,60 @@ VOICE_MODEL = "gpt-4o-mini-tts"
 
 VOICE_NAME = "alloy"
 
+
 # -----------------------------
 # Project Directories
 # -----------------------------
 
-OUTPUT_DIR = BASE_DIR / "output"
+OUTPUT_DIR = (
+    BASE_DIR / "output"
+)
 
-LESSON_DIR = OUTPUT_DIR / "lessons"
+LESSON_DIR = (
+    OUTPUT_DIR / "lessons"
+)
 
-IMAGE_DIR = OUTPUT_DIR / "images"
+IMAGE_DIR = (
+    OUTPUT_DIR / "images"
+)
 
-VOICE_DIR = OUTPUT_DIR / "voice"
+VOICE_DIR = (
+    OUTPUT_DIR / "voice"
+)
 
-VIDEO_DIR = OUTPUT_DIR / "videos"
+VIDEO_DIR = (
+    OUTPUT_DIR / "videos"
+)
+
+
+# -----------------------------
+# YouTube Configuration
+# -----------------------------
+
+YOUTUBE_CREDENTIALS_PATH = (
+    BASE_DIR
+    / "credentials"
+    / "client_secret.json"
+)
+
+YOUTUBE_TOKEN_PATH = (
+    BASE_DIR
+    / "tokens"
+    / "youtube_token.json"
+)
+
+YOUTUBE_PRIVACY_STATUS = os.getenv(
+    "YOUTUBE_PRIVACY_STATUS",
+    "private",
+)
+
+YOUTUBE_MADE_FOR_KIDS = True
+
+YOUTUBE_LANGUAGE = os.getenv(
+    "YOUTUBE_LANGUAGE",
+    "en",
+)
+
 
 # -----------------------------
 # Video Configuration
@@ -56,6 +119,7 @@ VIDEO_WIDTH = 1920
 VIDEO_HEIGHT = 1080
 
 FPS = 30
+
 
 # -----------------------------
 # Lesson Defaults

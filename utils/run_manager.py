@@ -2,17 +2,20 @@ from datetime import datetime
 from pathlib import Path
 from typing import Optional
 
-from config.settings import OUTPUT_DIR
 import json
+
+from config.settings import OUTPUT_DIR
+
 
 class RunManager:
 
     def __init__(
         self,
         topic: str,
-        run_directory: Optional[Path] = None,  
-    ):  
-        self.topic = topic  
+        run_directory: Optional[Path] = None,
+    ):
+
+        self.topic = topic
 
         if run_directory:
 
@@ -36,6 +39,10 @@ class RunManager:
                 / f"{timestamp}_{safe_topic}"
             )
 
+        # ---------------------------------
+        # Asset directories
+        # ---------------------------------
+
         self.images_dir = (
             self.root / "images"
         )
@@ -48,6 +55,10 @@ class RunManager:
             self.root / "video"
         )
 
+        # ---------------------------------
+        # Core pipeline files
+        # ---------------------------------
+
         self.lesson_path = (
             self.root / "lesson.json"
         )
@@ -55,12 +66,36 @@ class RunManager:
         self.storyboard_path = (
             self.root / "storyboard.json"
         )
+
         self.metadata_path = (
             self.root / "metadata.json"
         )
 
         self.final_video_path = (
             self.root / "final_video.mp4"
+        )
+
+        self.captions_path = (
+            self.root / "captions.srt"
+        )
+
+        # ---------------------------------
+        # YouTube files
+        # ---------------------------------
+
+        self.youtube_metadata_path = (
+            self.root
+            / "youtube_metadata.json"
+        )
+
+        self.thumbnail_path = (
+            self.root
+            / "thumbnail.jpg"
+        )
+
+        self.youtube_result_path = (
+            self.root
+            / "youtube_result.json"
         )
 
     def initialize(self):
@@ -105,8 +140,10 @@ class RunManager:
                 indent=4,
             )
 
-
-    def update_metadata(self, **updates):
+    def update_metadata(
+        self,
+        **updates,
+    ):
 
         if self.metadata_path.exists():
 
@@ -116,16 +153,22 @@ class RunManager:
                 encoding="utf-8",
             ) as file:
 
-                metadata = json.load(file)
+                metadata = json.load(
+                    file
+                )
 
         else:
 
             metadata = {
                 "topic": self.topic,
-                "created_at": datetime.now().isoformat(),
+                "created_at": (
+                    datetime.now().isoformat()
+                ),
             }
 
-        metadata.update(updates)
+        metadata.update(
+            updates
+        )
 
         metadata["updated_at"] = (
             datetime.now().isoformat()
@@ -167,9 +210,6 @@ class RunManager:
             if not run.is_dir():
                 continue
 
-            # Only consider a run resumable if
-            # it contains at least one pipeline artifact.
-
             has_lesson = (
                 run / "lesson.json"
             ).exists()
@@ -203,6 +243,18 @@ class RunManager:
                 run / "final_video.mp4"
             ).exists()
 
+            has_captions = (
+                run / "captions.srt"
+            ).exists()
+
+            has_youtube_metadata = (
+                run / "youtube_metadata.json"
+            ).exists()
+
+            has_youtube_result = (
+                run / "youtube_result.json"
+            ).exists()
+
             if (
                 has_lesson
                 or has_storyboard
@@ -210,7 +262,11 @@ class RunManager:
                 or has_voice
                 or has_video
                 or has_final_video
+                or has_captions
+                or has_youtube_metadata
+                or has_youtube_result
             ):
+
                 return run
 
         return None

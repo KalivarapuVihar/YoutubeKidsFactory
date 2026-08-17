@@ -1,4 +1,5 @@
 from pathlib import Path
+from services import youtube_uploader
 from services.openai_service import OpenAIService
 from services.lesson_generator import LessonGenerator
 from services.storyboard_generator import StoryboardGenerator
@@ -7,6 +8,21 @@ from services.voice_generator import VoiceGenerator
 from services.video_renderer import VideoRenderer
 from services.character_manager import CharacterManager
 from utils.caption_generator import CaptionGenerator
+from services.youtube_metadata_generator import (
+    YouTubeMetadataGenerator,
+)
+from services.thumbnail_generator import (
+    ThumbnailGenerator,
+)
+from services.youtube_uploader import YouTubeUploader
+
+from config.settings import (
+    YOUTUBE_CREDENTIALS_PATH,
+    YOUTUBE_TOKEN_PATH,
+    YOUTUBE_PRIVACY_STATUS,
+    YOUTUBE_MADE_FOR_KIDS,
+    YOUTUBE_LANGUAGE,
+)
 
 from utils.run_manager import RunManager
 from utils.file_manager import FileManager
@@ -86,11 +102,21 @@ def main():
     )
 
     image_generator = ImageGenerator(
-        ai_service
+        ai_service=ai_service,
+        character_manager=character_manager,
     )
 
     voice_generator = VoiceGenerator(
         ai_service
+    )
+    youtube_metadata_generator = (
+        YouTubeMetadataGenerator(
+            ai_service
+        )
+    )
+    thumbnail_generator = ThumbnailGenerator(
+        ai_service=ai_service,
+        character_manager=character_manager,
     )
     
 
@@ -412,7 +438,7 @@ def main():
     )
 
     run.update_metadata(
-        status="completed",
+        status="video_completed",
         final_video=str(
             run.final_video_path
         ),
@@ -443,6 +469,480 @@ def main():
         f"{duration_difference:.3f} seconds"
     )
 
+        # ---------------------------------
+    # YouTube Metadata
+    # ---------------------------------
+
+    print()
+    print("Generating YouTube metadata...")
+    print()
+
+    if run.youtube_metadata_path.exists():
+
+        print(
+            "YouTube metadata already exists. "
+            "Skipping generation."
+        )
+
+        youtube_metadata_data = (
+            FileManager.read_json(
+                run.youtube_metadata_path
+            )
+        )
+
+        from models.youtube_metadata import (
+            YouTubeMetadata,
+        )
+
+        youtube_metadata = (
+            YouTubeMetadata.model_validate(
+                youtube_metadata_data
+            )
+        )
+
+    else:
+
+        youtube_metadata = (
+            youtube_metadata_generator.generate(
+                topic=lesson.topic,
+                introduction=(
+                    lesson.introduction
+                ),
+                examples=lesson.examples,
+                activity_description=str(
+                    lesson.activity
+                ),
+                quiz_description=str(
+                    lesson.quiz
+                ),
+                song_title=lesson.song.title,
+                song_mood=lesson.song.mood,
+                existing_title=(
+                    lesson.metadata.title
+                ),
+                existing_description=(
+                    lesson.metadata.description
+                ),
+                existing_tags=(
+                    lesson.metadata.tags
+                ),
+            )
+        )
+
+        FileManager.save_json(
+            run.youtube_metadata_path,
+            youtube_metadata.model_dump(
+                mode="json"
+            ),
+        )
+
+        print(
+            "YouTube metadata generated successfully."
+        )
+
+    run.update_metadata(
+        status="youtube_metadata_completed"
+    )
+
+    print()
+    print(
+        "YouTube Title:",
+        youtube_metadata.title,
+    )
+
+    print(
+        "YouTube Category:",
+        youtube_metadata.category,
+    )
+
+    print(
+        "YouTube Audience:",
+        youtube_metadata.audience,
+    )
+
+    # ---------------------------------
+    # Thumbnail
+    # ---------------------------------
+
+    print()
+    print("Preparing YouTube thumbnail...")
+    print()
+
+    if run.thumbnail_path.exists():
+
+        print(
+            "Thumbnail already exists. "
+            "Skipping generation."
+        )
+
+    else:
+
+        thumbnail_generator.generate_from_metadata(
+            metadata=youtube_metadata,
+            output_path=run.thumbnail_path,
+        )
+
+        print(
+            "Thumbnail generated successfully."
+        )
+
+    run.update_metadata(
+        status="thumbnail_completed"
+    )
+
+    print(
+        f"Thumbnail: {run.thumbnail_path}"
+    )
+
+    # ---------------------------------
+    # YouTube Publishing
+    # ---------------------------------
+
+    print()
+    print("Preparing YouTube publishing...")
+    print()
+
+    # Initialize YouTube only when publishing
+    youtube_uploader = YouTubeUploader(
+        credentials_path=YOUTUBE_CREDENTIALS_PATH,
+        token_path=YOUTUBE_TOKEN_PATH,
+    )
+
+    # ---------------------------------
+    # Load publishing state
+    # ---------------------------------
+
+    if run.youtube_result_path.exists():
+
+        publishing_state = (
+            FileManager.read_json(
+                run.youtube_result_path
+            )
+        )
+
+        # Support an older youtube_result.json
+        # that contains video information directly.
+        if "video_id" in publishing_state:
+
+            publishing_state = {
+                "video": publishing_state,
+                "captions": None,
+                "thumbnail": None,
+            }
+
+    else:
+
+        publishing_state = {
+            "video": None,
+            "captions": None,
+            "thumbnail": None,
+        }
+
+    # ---------------------------------
+    # YouTube Video
+    # ---------------------------------
+
+    if publishing_state["video"]:
+
+        youtube_result = (
+            publishing_state["video"]
+        )
+
+        print(
+            "YouTube video already uploaded."
+        )
+
+        print(
+            "Video ID:",
+            youtube_result["video_id"],
+        )
+
+    else:
+
+        print(
+            "Uploading video to YouTube..."
+        )
+
+        youtube_result = (
+            youtube_uploader.upload_video(
+                video_path=(
+                    run.final_video_path
+                ),
+                title=(
+                    youtube_metadata.title
+                ),
+                description=(
+                    youtube_metadata.description
+                ),
+                tags=(
+                    youtube_metadata.tags
+                ),
+                privacy_status=(
+                    YOUTUBE_PRIVACY_STATUS
+                ),
+                made_for_kids=(
+                    YOUTUBE_MADE_FOR_KIDS
+                ),
+                language=YOUTUBE_LANGUAGE,
+            )
+        )
+
+        publishing_state["video"] = (
+            youtube_result
+        )
+
+        # IMPORTANT:
+        # Save immediately after video upload.
+        # If a later step fails, we never upload
+        # another YouTube video on retry.
+
+        FileManager.save_json(
+            run.youtube_result_path,
+            publishing_state,
+        )
+
+        print()
+        print(
+            "YouTube video uploaded successfully."
+        )
+
+        print(
+            "Video ID:",
+            youtube_result["video_id"],
+        )
+
+        print(
+            "URL:",
+            youtube_result["url"],
+        )
+
+    run.update_metadata(
+        status="youtube_uploaded",
+        youtube_video_id=(
+            youtube_result["video_id"]
+        ),
+        youtube_url=(
+            youtube_result["url"]
+        ),
+        youtube_privacy_status=(
+            youtube_result["privacy_status"]
+        ),
+        youtube_made_for_kids=(
+            youtube_result["made_for_kids"]
+        ),
+    )
+
+    # ---------------------------------
+    # YouTube Captions
+    # ---------------------------------
+
+    if publishing_state["captions"]:
+
+        caption_result = (
+            publishing_state["captions"]
+        )
+
+        print()
+        print(
+            "YouTube captions already uploaded."
+        )
+
+    else:
+
+        print()
+        print(
+            "Uploading YouTube captions..."
+        )
+
+        caption_result = (
+            youtube_uploader.upload_captions(
+                video_id=(
+                    youtube_result["video_id"]
+                ),
+                caption_path=(
+                    run.captions_path
+                ),
+                language=YOUTUBE_LANGUAGE,
+                name="English",
+                is_draft=False,
+            )
+        )
+
+        publishing_state["captions"] = (
+            caption_result
+        )
+
+        # Save immediately.
+        FileManager.save_json(
+            run.youtube_result_path,
+            publishing_state,
+        )
+
+        print(
+            "YouTube captions uploaded successfully."
+        )
+
+    # ---------------------------------
+    # YouTube Thumbnail
+    # ---------------------------------
+
+    if publishing_state["thumbnail"]:
+
+        thumbnail_result = (
+            publishing_state["thumbnail"]
+        )
+
+        print()
+        print(
+            "YouTube thumbnail already uploaded."
+        )
+
+    else:
+
+        print()
+        print(
+            "Uploading YouTube thumbnail..."
+        )
+
+        thumbnail_result = (
+            youtube_uploader.set_thumbnail(
+                video_id=(
+                    youtube_result["video_id"]
+                ),
+                thumbnail_path=(
+                    run.thumbnail_path
+                ),
+            )
+        )
+
+        publishing_state["thumbnail"] = (
+            thumbnail_result
+        )
+
+        # Save immediately.
+        FileManager.save_json(
+            run.youtube_result_path,
+            publishing_state,
+        )
+
+        print(
+            "YouTube thumbnail uploaded successfully."
+        )
+
+    # ---------------------------------
+    # Publishing Complete
+    # ---------------------------------
+
+    run.update_metadata(
+        status="youtube_publishing_completed"
+    )
+
+    print()
+    print("=" * 50)
+    print("YOUTUBE PUBLISHING COMPLETED")
+    print("=" * 50)
+    print()
+
+    print(
+        "Video:",
+        youtube_result["url"],
+    )
+
+    print(
+        "Privacy:",
+        youtube_result["privacy_status"],
+    )
+
+    print(
+        "Made for Kids:",
+        youtube_result["made_for_kids"],
+    )
+    
+    # ---------------------------------
+    # YouTube Captions
+    # ---------------------------------
+
+    print()
+    print("Uploading YouTube captions...")
+    print()
+
+    caption_result = (
+        youtube_uploader.upload_captions(
+            video_id=(
+                youtube_result["video_id"]
+            ),
+            caption_path=run.captions_path,
+            language=YOUTUBE_LANGUAGE,
+            name="English",
+            is_draft=False,
+        )
+    )
+
+    print(
+        "YouTube captions uploaded successfully."
+    )
+
+    # ---------------------------------
+    # YouTube Thumbnail
+    # ---------------------------------
+
+    print()
+    print("Uploading YouTube thumbnail...")
+    print()
+
+    thumbnail_result = (
+        youtube_uploader.set_thumbnail(
+            video_id=(
+                youtube_result["video_id"]
+            ),
+            thumbnail_path=run.thumbnail_path,
+        )
+    )
+
+    print(
+        "YouTube thumbnail uploaded successfully."
+    )
+
+    # ---------------------------------
+    # Save YouTube Publishing Results
+    # ---------------------------------
+
+    publishing_result = {
+        "video": youtube_result,
+        "caption": caption_result,
+        "thumbnail": thumbnail_result,
+    }
+
+    FileManager.save_json(
+        run.youtube_result_path,
+        publishing_result,
+    )
+
+    run.update_metadata(
+        status="youtube_publishing_completed"
+    )
+
+    print()
+    print("=" * 50)
+    print("YOUTUBE PUBLISHING COMPLETED")
+    print("=" * 50)
+    print()
+
+    print(
+        "Video:",
+        youtube_result["url"],
+    )
+
+    print(
+        "Privacy:",
+        youtube_result["privacy_status"],
+    )
+
+    print(
+        "Made for Kids:",
+        youtube_result["made_for_kids"],
+    )
+    
     print()
     print("=" * 50)
     print("PIPELINE COMPLETED")

@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 from typing import List
 
@@ -11,7 +12,8 @@ from googleapiclient.http import MediaFileUpload
 class YouTubeUploader:
 
     SCOPES = [
-        "https://www.googleapis.com/auth/youtube.upload"
+        "https://www.googleapis.com/auth/youtube.upload",
+        "https://www.googleapis.com/auth/youtube.force-ssl",
     ]
 
     def __init__(
@@ -19,6 +21,7 @@ class YouTubeUploader:
         credentials_path: Path,
         token_path: Path,
     ):
+
         self.credentials_path = Path(
             credentials_path
         )
@@ -27,7 +30,9 @@ class YouTubeUploader:
             token_path
         )
 
-        self.youtube = self._authenticate()
+        self.youtube = (
+            self._authenticate()
+        )
 
     def _authenticate(self):
 
@@ -50,17 +55,29 @@ class YouTubeUploader:
                     Request()
                 )
 
-        if not credentials or not credentials.valid:
+        if (
+            not credentials
+            or not credentials.valid
+        ):
 
             flow = (
-                InstalledAppFlow.from_client_secrets_file(
-                    str(self.credentials_path),
+                InstalledAppFlow
+                .from_client_secrets_file(
+                    str(
+                        self.credentials_path
+                    ),
                     self.SCOPES,
                 )
             )
 
-            credentials = flow.run_local_server(
-                port=0
+            credentials = (
+                flow.run_local_server(
+                    port=0,
+                    prompt="consent",
+                    login_hint=os.getenv(
+                        "YOUTUBE_GOOGLE_ACCOUNT"
+                    ),
+                )
             )
 
         self.token_path.parent.mkdir(
@@ -103,7 +120,8 @@ class YouTubeUploader:
         if not video_path.exists():
 
             raise FileNotFoundError(
-                f"Video not found: {video_path}"
+                f"Video not found: "
+                f"{video_path}"
             )
 
         allowed_privacy = {
@@ -112,7 +130,10 @@ class YouTubeUploader:
             "public",
         }
 
-        if privacy_status not in allowed_privacy:
+        if (
+            privacy_status
+            not in allowed_privacy
+        ):
 
             raise ValueError(
                 "Invalid privacy status. "
@@ -130,7 +151,9 @@ class YouTubeUploader:
             },
             "status": {
                 "privacyStatus": privacy_status,
-                "selfDeclaredMadeForKids": made_for_kids,
+                "selfDeclaredMadeForKids": (
+                    made_for_kids
+                ),
             },
         }
 
@@ -154,18 +177,24 @@ class YouTubeUploader:
 
         while response is None:
 
-            _, response = request.next_chunk()
+            _, response = (
+                request.next_chunk()
+            )
 
         video_id = response["id"]
 
         return {
             "video_id": video_id,
             "url": (
-                f"https://www.youtube.com/watch?v="
+                "https://www.youtube.com/watch?v="
                 f"{video_id}"
             ),
-            "privacy_status": privacy_status,
-            "made_for_kids": made_for_kids,
+            "privacy_status": (
+                privacy_status
+            ),
+            "made_for_kids": (
+                made_for_kids
+            ),
         }
 
     def upload_captions(
@@ -237,9 +266,47 @@ class YouTubeUploader:
                 f"{thumbnail_path}"
             )
 
+        max_size = 2 * 1024 * 1024
+
+        file_size = thumbnail_path.stat().st_size
+
+        if file_size > max_size:
+
+            size_mb = (
+                file_size / (1024 * 1024)
+            )
+
+            raise ValueError(
+                "Thumbnail is too large: "
+                f"{size_mb:.2f} MB. "
+                "YouTube requires thumbnails "
+                "to be 2 MB or smaller."
+            )
+
+        extension = (
+            thumbnail_path
+            .suffix
+            .lower()
+        )
+
+        mime_types = {
+            ".jpg": "image/jpeg",
+            ".jpeg": "image/jpeg",
+            ".png": "image/png",
+        }
+
+        if extension not in mime_types:
+
+            raise ValueError(
+                "Unsupported thumbnail format. "
+                "Use JPG, JPEG, or PNG."
+            )
+
         media = MediaFileUpload(
             str(thumbnail_path),
-            mimetype="image/png",
+            mimetype=mime_types[
+                extension
+            ],
             resumable=False,
         )
 
