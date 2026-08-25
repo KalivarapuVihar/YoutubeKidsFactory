@@ -48,12 +48,16 @@ class YouTubeUploader:
             )
 
         if credentials and credentials.expired:
-
             if credentials.refresh_token:
-
-                credentials.refresh(
-                    Request()
-                )
+                try:
+                    credentials.refresh(Request())
+                except Exception as exc:
+                    print()
+                    print("Existing YouTube token could not be refreshed.")
+                    print("A new YouTube authorization will be requested.")
+                    print(f"Reason: {exc}")
+                    print()
+                    credentials = None
 
         if (
             not credentials
@@ -323,4 +327,54 @@ class YouTubeUploader:
         return {
             "thumbnail_uploaded": True,
             "video_id": video_id,
+        }
+    
+    def update_video(
+        self,
+        video_id: str,
+        title: str,
+        description: str,
+        tags: List[str],
+        category_id: str = "27",
+        made_for_kids: bool = True,
+        language: str = "en",
+    ) -> dict:
+
+        body = {
+            "id": video_id,
+            "snippet": {
+                "title": title,
+                "description": description,
+                "tags": tags,
+                "categoryId": category_id,
+                "defaultLanguage": language,
+                "defaultAudioLanguage": language,
+            },
+            "status": {
+                "selfDeclaredMadeForKids": made_for_kids,
+            },
+        }
+
+        response = (
+            self.youtube
+            .videos()
+            .update(
+                part="snippet,status",
+                body=body,
+            )
+            .execute()
+        )
+
+        return {
+            "video_id": response["id"],
+            "url": (
+                "https://www.youtube.com/watch?v="
+                + response["id"]
+            ),
+            "privacy_status": response["status"].get(
+                              "privacyStatus"
+            ),
+            "made_for_kids": response["status"].get(
+                "selfDeclaredMadeForKids"
+            ),
         }

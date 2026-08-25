@@ -145,11 +145,7 @@ class VideoRenderer:
         return video_paths
 
     @staticmethod
-    def concatenate_videos(
-        video_paths: list[Path],
-        output_path: Path,
-    ) -> str:
-
+    def concatenate_videos(video_paths: list[Path],output_path: Path,) -> str:   
         logger.info(
             f"Concatenating "
             f"{len(video_paths)} video segments."
@@ -167,8 +163,15 @@ class VideoRenderer:
 
             for video_path in video_paths:
 
+                resolved_path = (
+                    video_path.resolve()
+                )
+
+                # Use an unquoted absolute path.
+                # This avoids problems with apostrophes
+                # in directory or file names.
                 file.write(
-                    f"file '{video_path.resolve()}'\n"
+                    f"file {resolved_path}\n"
                 )
 
         command = [

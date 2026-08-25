@@ -77,16 +77,58 @@ class CaptionGenerator:
             scene_durations,
         ):
 
+            # Prefer explicitly generated caption text.
             caption_text = (
                 getattr(
                     scene,
                     "caption_text",
-                    None,
+                    "",
                 )
                 or ""
             ).strip()
 
+            # If caption_text is empty, build captions
+            # from the scene dialogue and narration.
             if not caption_text:
+
+                dialogue = getattr(
+                    scene,
+                    "dialogue",
+                    [],
+                ) or []
+
+                narration = getattr(
+                    scene,
+                    "narration",
+                    "",
+                ) or ""
+
+                caption_parts = []
+
+                for line in dialogue:
+
+                    line = str(line).strip()
+
+                    if line:
+                        caption_parts.append(
+                            line
+                        )
+
+                narration = str(
+                    narration
+                ).strip()
+
+                if narration:
+                    caption_parts.append(
+                        narration
+                    )
+
+                caption_text = " ".join(
+                    caption_parts
+                ).strip()
+
+            if not caption_text:
+
                 current_time += duration
                 continue
 

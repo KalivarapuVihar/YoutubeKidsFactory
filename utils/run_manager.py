@@ -1,8 +1,8 @@
 from datetime import datetime
 from pathlib import Path
 from typing import Optional
-
 import json
+import re
 
 from config.settings import OUTPUT_DIR
 
@@ -30,8 +30,9 @@ class RunManager:
             )
 
             safe_topic = (
-                topic.lower()
-                .replace(" ", "_")
+                self.sanitize_topic(
+                    topic
+                )
             )
 
             self.root = (
@@ -98,6 +99,71 @@ class RunManager:
             / "youtube_result.json"
         )
 
+    # ---------------------------------
+    # Topic / directory helpers
+    # ---------------------------------
+
+    @staticmethod
+    def sanitize_topic(
+        topic: str,
+    ) -> str:
+
+        """
+        Convert a topic into a safe filesystem
+        directory name.
+
+        Examples:
+
+        Maya's Rainbow Mystery
+        ->
+        mayas_rainbow_mystery
+
+        Why Does a Rainbow Appear?
+        ->
+        why_does_a_rainbow_appear
+
+        Let's Learn Colors & Shapes!
+        ->
+        lets_learn_colors_shapes
+        """
+
+        safe_topic = topic.strip().lower()
+
+        # Replace apostrophes by removing them rather
+        # than turning them into underscores.
+        safe_topic = safe_topic.replace(
+            "'",
+            "",
+        )
+
+        # Replace every remaining sequence of
+        # non-alphanumeric characters with "_".
+        safe_topic = re.sub(
+            r"[^a-z0-9]+",
+            "_",
+            safe_topic,
+        )
+
+        # Remove leading/trailing underscores.
+        safe_topic = safe_topic.strip(
+            "_"
+        )
+
+        # Prevent excessively long directory names.
+        safe_topic = safe_topic[:100].rstrip(
+            "_"
+        )
+
+        if not safe_topic:
+
+            safe_topic = "untitled"
+
+        return safe_topic
+
+    # ---------------------------------
+    # Directory initialization
+    # ---------------------------------
+
     def initialize(self):
 
         self.images_dir.mkdir(
@@ -115,6 +181,10 @@ class RunManager:
             exist_ok=True,
         )
 
+    # ---------------------------------
+    # Metadata
+    # ---------------------------------
+
     def create_metadata(self):
 
         if self.metadata_path.exists():
@@ -124,8 +194,12 @@ class RunManager:
             "topic": self.topic,
             "status": "created",
             "scenes": 0,
-            "created_at": datetime.now().isoformat(),
-            "updated_at": datetime.now().isoformat(),
+            "created_at": (
+                datetime.now().isoformat()
+            ),
+            "updated_at": (
+                datetime.now().isoformat()
+            ),
         }
 
         with open(
@@ -186,14 +260,19 @@ class RunManager:
                 indent=4,
             )
 
+    # ---------------------------------
+    # Existing run detection
+    # ---------------------------------
+
     @staticmethod
     def find_existing_run(
         topic: str,
     ):
 
         safe_topic = (
-            topic.lower()
-            .replace(" ", "_")
+            RunManager.sanitize_topic(
+                topic
+            )
         )
 
         pattern = (

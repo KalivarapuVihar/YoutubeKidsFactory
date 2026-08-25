@@ -1,5 +1,5 @@
 from pathlib import Path
-from services import youtube_uploader
+
 from services.openai_service import OpenAIService
 from services.lesson_generator import LessonGenerator
 from services.storyboard_generator import StoryboardGenerator
@@ -28,23 +28,24 @@ from utils.run_manager import RunManager
 from utils.file_manager import FileManager
 from utils.asset_validator import AssetValidator
 
+
 def main():
 
     topic = input(
-    "Enter topic for the video: "
+        "Enter topic for the video: "
     ).strip()
 
     if not topic:
         raise ValueError(
-        "Topic cannot be empty."
-    )
+            "Topic cannot be empty."
+        )
 
     # ---------------------------------
-    # Create run
+    # Create or resume run
     # ---------------------------------
 
     existing_run = RunManager.find_existing_run(
-    topic
+        topic
     )
 
     if existing_run:
@@ -80,7 +81,9 @@ def main():
     run.create_metadata()
 
     print()
-    print(f"Run directory: {run.root}")
+    print(
+        f"Run directory: {run.root}"
+    )
     print()
 
     # ---------------------------------
@@ -109,16 +112,17 @@ def main():
     voice_generator = VoiceGenerator(
         ai_service
     )
+
     youtube_metadata_generator = (
         YouTubeMetadataGenerator(
             ai_service
         )
     )
+
     thumbnail_generator = ThumbnailGenerator(
         ai_service=ai_service,
         character_manager=character_manager,
     )
-    
 
     # ---------------------------------
     # Lesson
@@ -143,7 +147,9 @@ def main():
 
     else:
 
-        print("Generating lesson...")
+        print(
+            "Generating lesson..."
+        )
 
         lesson = lesson_generator.generate(
             topic=topic
@@ -155,13 +161,12 @@ def main():
         )
 
         run.update_metadata(
-                    status="lesson_completed",
+            status="lesson_completed",
         )
 
         print(
             "Lesson generated successfully."
         )
-        
 
     # ---------------------------------
     # Storyboard
@@ -185,13 +190,16 @@ def main():
         storyboard = Storyboard.model_validate(
             storyboard_data
         )
+
         run.update_metadata(
             scenes=len(storyboard.scenes),
         )
 
     else:
 
-        print("Generating storyboard...")
+        print(
+            "Generating storyboard..."
+        )
 
         storyboard = (
             storyboard_generator.generate(
@@ -220,7 +228,9 @@ def main():
     # ---------------------------------
 
     print()
-    print("Generating scene assets...")
+    print(
+        "Generating scene assets..."
+    )
     print()
 
     for scene in storyboard.scenes:
@@ -239,10 +249,13 @@ def main():
 
         # Image
 
-        if AssetValidator.is_valid_file(image_path):
+        if AssetValidator.is_valid_file(
+            image_path
+        ):
 
             print(
-                f"Skipping valid image {scene_number}"
+                f"Skipping valid image "
+                f"{scene_number}"
             )
 
         else:
@@ -250,7 +263,8 @@ def main():
             if image_path.exists():
 
                 print(
-                    f"Invalid image {scene_number}. "
+                    f"Invalid image "
+                    f"{scene_number}. "
                     f"Regenerating..."
                 )
 
@@ -259,7 +273,8 @@ def main():
             else:
 
                 print(
-                    f"Generating image {scene_number}..."
+                    f"Generating image "
+                    f"{scene_number}..."
                 )
 
             image_generator.generate(
@@ -269,10 +284,13 @@ def main():
 
         # Voice
 
-        if AssetValidator.is_valid_media(voice_path):
+        if AssetValidator.is_valid_media(
+            voice_path
+        ):
 
             print(
-                f"Skipping valid voice {scene_number}"
+                f"Skipping valid voice "
+                f"{scene_number}"
             )
 
         else:
@@ -280,7 +298,8 @@ def main():
             if voice_path.exists():
 
                 print(
-                    f"Invalid voice {scene_number}. "
+                    f"Invalid voice "
+                    f"{scene_number}. "
                     f"Regenerating..."
                 )
 
@@ -289,7 +308,8 @@ def main():
             else:
 
                 print(
-                    f"Generating voice {scene_number}..."
+                    f"Generating voice "
+                    f"{scene_number}..."
                 )
 
             voice_generator.generate(
@@ -298,7 +318,9 @@ def main():
             )
 
     print()
-    print("All scene assets ready.")
+    print(
+        "All scene assets ready."
+    )
 
     run.update_metadata(
         status="images_and_voice_completed"
@@ -309,7 +331,9 @@ def main():
     # ---------------------------------
 
     print()
-    print("Generating scene videos...")
+    print(
+        "Generating scene videos..."
+    )
     print()
 
     video_paths = (
@@ -318,6 +342,7 @@ def main():
             scenes=storyboard.scenes,
         )
     )
+
     # ---------------------------------
     # Duration Tracking
     # ---------------------------------
@@ -350,7 +375,9 @@ def main():
     # ---------------------------------
 
     print()
-    print("Generating captions...")
+    print(
+        "Generating captions..."
+    )
     print()
 
     actual_scene_durations = [
@@ -360,27 +387,21 @@ def main():
         for scene in storyboard.scenes
     ]
 
-    captions_path = (
-        run.root / "captions.srt"
-    )
-
     CaptionGenerator.generate_srt(
         scenes=storyboard.scenes,
         scene_durations=actual_scene_durations,
-        output_path=captions_path,
+        output_path=run.captions_path,
     )
 
     print(
-        f"Captions created: {captions_path}"
+        f"Captions created: "
+        f"{run.captions_path}"
     )
 
     run.update_metadata(
         scene_durations=scene_durations,
         total_duration=total_duration,
-    )
-
-    run.update_metadata(
-        status="scene_videos_completed"
+        status="scene_videos_completed",
     )
 
     # ---------------------------------
@@ -412,7 +433,9 @@ def main():
         else:
 
             print()
-            print("Creating final video...")
+            print(
+                "Creating final video..."
+            )
 
         VideoRenderer.concatenate_videos(
             video_paths=video_paths,
@@ -422,7 +445,6 @@ def main():
         print(
             "Final video created successfully."
         )
-
 
     # ---------------------------------
     # Final Duration Validation
@@ -469,12 +491,14 @@ def main():
         f"{duration_difference:.3f} seconds"
     )
 
-        # ---------------------------------
+    # ---------------------------------
     # YouTube Metadata
     # ---------------------------------
 
     print()
-    print("Generating YouTube metadata...")
+    print(
+        "Generating YouTube metadata..."
+    )
     print()
 
     if run.youtube_metadata_path.exists():
@@ -505,9 +529,7 @@ def main():
         youtube_metadata = (
             youtube_metadata_generator.generate(
                 topic=lesson.topic,
-                introduction=(
-                    lesson.introduction
-                ),
+                introduction=lesson.introduction,
                 examples=lesson.examples,
                 activity_description=str(
                     lesson.activity
@@ -537,7 +559,8 @@ def main():
         )
 
         print(
-            "YouTube metadata generated successfully."
+            "YouTube metadata generated "
+            "successfully."
         )
 
     run.update_metadata(
@@ -565,7 +588,9 @@ def main():
     # ---------------------------------
 
     print()
-    print("Preparing YouTube thumbnail...")
+    print(
+        "Preparing YouTube thumbnail..."
+    )
     print()
 
     if run.thumbnail_path.exists():
@@ -599,14 +624,10 @@ def main():
     # ---------------------------------
 
     print()
-    print("Preparing YouTube publishing...")
-    print()
-
-    # Initialize YouTube only when publishing
-    youtube_uploader = YouTubeUploader(
-        credentials_path=YOUTUBE_CREDENTIALS_PATH,
-        token_path=YOUTUBE_TOKEN_PATH,
+    print(
+        "Preparing YouTube publishing..."
     )
+    print()
 
     # ---------------------------------
     # Load publishing state
@@ -620,8 +641,8 @@ def main():
             )
         )
 
-        # Support an older youtube_result.json
-        # that contains video information directly.
+        # Support older result files that
+        # stored the video directly.
         if "video_id" in publishing_state:
 
             publishing_state = {
@@ -630,6 +651,34 @@ def main():
                 "thumbnail": None,
             }
 
+        # Support the older singular key.
+        if (
+            "caption" in publishing_state
+            and "captions"
+            not in publishing_state
+        ):
+
+            publishing_state["captions"] = (
+                publishing_state.pop(
+                    "caption"
+                )
+            )
+
+        publishing_state.setdefault(
+            "video",
+            None,
+        )
+
+        publishing_state.setdefault(
+            "captions",
+            None,
+        )
+
+        publishing_state.setdefault(
+            "thumbnail",
+            None,
+        )
+
     else:
 
         publishing_state = {
@@ -637,6 +686,45 @@ def main():
             "captions": None,
             "thumbnail": None,
         }
+
+    print()
+    print(
+        "Publishing state:"
+    )
+
+    print(
+        FileManager.read_json(
+            run.youtube_result_path
+        )
+        if run.youtube_result_path.exists()
+        else publishing_state
+    )
+
+    # ---------------------------------
+    # Initialize YouTube uploader only
+    # when at least one upload is needed.
+    # ---------------------------------
+
+    upload_needed = (
+        not publishing_state["video"]
+        or not publishing_state["captions"]
+        or not publishing_state["thumbnail"]
+    )
+
+    if upload_needed:
+
+        youtube_uploader = YouTubeUploader(
+            credentials_path=(
+                YOUTUBE_CREDENTIALS_PATH
+            ),
+            token_path=(
+                YOUTUBE_TOKEN_PATH
+            ),
+        )
+
+    else:
+
+        youtube_uploader = None
 
     # ---------------------------------
     # YouTube Video
@@ -648,8 +736,10 @@ def main():
             publishing_state["video"]
         )
 
+        print()
         print(
-            "YouTube video already uploaded."
+            "YouTube video already uploaded. "
+            "Skipping video upload."
         )
 
         print(
@@ -659,6 +749,7 @@ def main():
 
     else:
 
+        print()
         print(
             "Uploading video to YouTube..."
         )
@@ -691,11 +782,9 @@ def main():
             youtube_result
         )
 
-        # IMPORTANT:
-        # Save immediately after video upload.
-        # If a later step fails, we never upload
-        # another YouTube video on retry.
-
+        # Save immediately after the video
+        # upload so a retry never uploads
+        # another video.
         FileManager.save_json(
             run.youtube_result_path,
             publishing_state,
@@ -744,7 +833,8 @@ def main():
 
         print()
         print(
-            "YouTube captions already uploaded."
+            "YouTube captions already uploaded. "
+            "Skipping caption upload."
         )
 
     else:
@@ -772,14 +862,14 @@ def main():
             caption_result
         )
 
-        # Save immediately.
         FileManager.save_json(
             run.youtube_result_path,
             publishing_state,
         )
 
         print(
-            "YouTube captions uploaded successfully."
+            "YouTube captions uploaded "
+            "successfully."
         )
 
     # ---------------------------------
@@ -794,7 +884,8 @@ def main():
 
         print()
         print(
-            "YouTube thumbnail already uploaded."
+            "YouTube thumbnail already uploaded. "
+            "Skipping thumbnail upload."
         )
 
     else:
@@ -819,14 +910,14 @@ def main():
             thumbnail_result
         )
 
-        # Save immediately.
         FileManager.save_json(
             run.youtube_result_path,
             publishing_state,
         )
 
         print(
-            "YouTube thumbnail uploaded successfully."
+            "YouTube thumbnail uploaded "
+            "successfully."
         )
 
     # ---------------------------------
@@ -839,7 +930,9 @@ def main():
 
     print()
     print("=" * 50)
-    print("YOUTUBE PUBLISHING COMPLETED")
+    print(
+        "YOUTUBE PUBLISHING COMPLETED"
+    )
     print("=" * 50)
     print()
 
@@ -857,99 +950,24 @@ def main():
         "Made for Kids:",
         youtube_result["made_for_kids"],
     )
-    
-    # ---------------------------------
-    # YouTube Captions
-    # ---------------------------------
 
     print()
-    print("Uploading YouTube captions...")
-    print()
-
-    caption_result = (
-        youtube_uploader.upload_captions(
-            video_id=(
-                youtube_result["video_id"]
-            ),
-            caption_path=run.captions_path,
-            language=YOUTUBE_LANGUAGE,
-            name="English",
-            is_draft=False,
-        )
-    )
-
-    print(
-        "YouTube captions uploaded successfully."
-    )
 
     # ---------------------------------
-    # YouTube Thumbnail
+    # Pipeline Complete
     # ---------------------------------
-
-    print()
-    print("Uploading YouTube thumbnail...")
-    print()
-
-    thumbnail_result = (
-        youtube_uploader.set_thumbnail(
-            video_id=(
-                youtube_result["video_id"]
-            ),
-            thumbnail_path=run.thumbnail_path,
-        )
-    )
-
-    print(
-        "YouTube thumbnail uploaded successfully."
-    )
-
-    # ---------------------------------
-    # Save YouTube Publishing Results
-    # ---------------------------------
-
-    publishing_result = {
-        "video": youtube_result,
-        "caption": caption_result,
-        "thumbnail": thumbnail_result,
-    }
-
-    FileManager.save_json(
-        run.youtube_result_path,
-        publishing_result,
-    )
-
-    run.update_metadata(
-        status="youtube_publishing_completed"
-    )
 
     print()
     print("=" * 50)
-    print("YOUTUBE PUBLISHING COMPLETED")
+    print(
+        "PIPELINE COMPLETED"
+    )
     print("=" * 50)
     print()
 
     print(
-        "Video:",
-        youtube_result["url"],
-    )
-
-    print(
-        "Privacy:",
-        youtube_result["privacy_status"],
-    )
-
-    print(
-        "Made for Kids:",
-        youtube_result["made_for_kids"],
-    )
-    
-    print()
-    print("=" * 50)
-    print("PIPELINE COMPLETED")
-    print("=" * 50)
-    print()
-    print(
-        f"Final video: {run.final_video_path}"
+        f"Final video: "
+        f"{run.final_video_path}"
     )
 
 
