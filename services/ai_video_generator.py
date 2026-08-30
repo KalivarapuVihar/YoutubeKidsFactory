@@ -52,13 +52,13 @@ class AIVideoGenerator:
         )
 
     def generate(
-        self,
-        image_path: Path,
-        output_path: Path,
-        prompt: str,
-        duration: int = 5,
-        ratio: str = "1280:720",
-        skip_existing: bool = True,
+    self,
+    image_path: Path,
+    output_path: Path,
+    prompt: str,
+    duration: int = 5,
+    ratio: str = "1280:720",
+    skip_existing: bool = True,
     ) -> Path:
 
         image_path = Path(image_path)
@@ -66,28 +66,21 @@ class AIVideoGenerator:
 
         if duration < 2 or duration > 10:
             raise ValueError(
-                "Runway video duration must "
-                "be between 2 and 10 seconds."
+                "Runway video duration must be between 2 and 10 seconds."
             )
 
         if skip_existing and output_path.exists():
-
             file_size = (
-                output_path.stat().st_size
-                / (1024 * 1024)
+                output_path.stat().st_size / (1024 * 1024)
             )
 
             print()
+            print("AI motion video already exists.")
             print(
-                "AI motion video already exists."
+                f"Skipping Runway generation: {output_path}"
             )
             print(
-                f"Skipping Runway generation: "
-                f"{output_path}"
-            )
-            print(
-                f"Existing video size: "
-                f"{file_size:.2f} MB"
+                f"Existing video size: {file_size:.2f} MB"
             )
             print()
 
@@ -103,119 +96,190 @@ class AIVideoGenerator:
         print("AI VIDEO GENERATION")
         print("=" * 60)
         print()
-
         print("Model:", self.model)
         print("Input:", image_path)
         print("Output:", output_path)
         print("Duration:", duration, "seconds")
         print("Ratio:", ratio)
-
         print()
+
         print("Motion prompt:")
         print("-" * 60)
         print(prompt)
         print("-" * 60)
-
-        print()
-        print("Submitting image-to-video request...")
         print()
 
-        image_data_uri = (
-            self._image_to_data_uri(
-                image_path
-            )
+        image_data_uri = self._image_to_data_uri(
+            image_path
         )
 
-        try:
+        # -------------------------------------------------
+        # Attempt 1: Original motion prompt
+        # -------------------------------------------------
 
-            task = (
-                self.client.image_to_video.create(
-                    model=self.model,
-                    prompt_image=image_data_uri,
-                    prompt_text=prompt,
-                    ratio=ratio,
-                    duration=duration,
-                )
-                .wait_for_task_output()
+        prompts = [
+            prompt,
+
+            # Simpler fallback prompt.
+            (
+                "Preserve the exact characters, appearance, clothing, "
+                "colors, proportions, environment and preschool 3D "
+                "animation style of the input image. "
+
+                f"Animate the characters naturally for {duration} seconds. "
+
+                "Use smooth, gentle and believable movement. "
+                "Keep faces, hands, arms, legs, bodies and identities stable. "
+                "Show simple natural gestures and facial expressions. "
+
+                "Preserve the existing environment and objects. "
+                "Do not add characters or unrelated objects. "
+
+                "Keep the original composition and main subjects clearly visible. "
+                "No deformation, morphing, duplication, text, logos or watermark."
             )
+        ]
 
-        except TaskFailedError as exc:
+        last_exception = None
+
+        for attempt_number, current_prompt in enumerate(
+            prompts,
+            start=1,
+        ):
 
             print()
             print(
-                "AI VIDEO GENERATION FAILED"
+                f"Submitting Runway attempt "
+                f"{attempt_number}/{len(prompts)}..."
             )
             print()
 
-            print(exc)
+            try:
 
-            if hasattr(
-                exc,
-                "task_details",
-            ):
+                task = (
+                    self.client.image_to_video.create(
+                        model=self.model,
+                        prompt_image=image_data_uri,
+                        prompt_text=current_prompt,
+                        ratio=ratio,
+                        duration=duration,
+                    )
+                    .wait_for_task_output()
+                )
+
+                if not task.output:
+                    raise RuntimeError(
+                        "Runway task completed but returned "
+                        "no video output."
+                    )
+
+                video_url = task.output[0]
 
                 print()
                 print(
-                    "Task details:",
-                    exc.task_details,
+                    "AI video generated successfully."
+                )
+                print(
+                    "Video URL received."
+                )
+                print(
+                    "Downloading video..."
+                )
+                print()
+
+                urllib.request.urlretrieve(
+                    video_url,
+                    output_path,
                 )
 
-            raise
+                if not output_path.exists():
+                    raise RuntimeError(
+                        "Video download failed."
+                    )
 
-        if not task.output:
+                file_size = (
+                    output_path.stat().st_size
+                    / (1024 * 1024)
+                )
 
-            raise RuntimeError(
-                "Runway task completed but "
-                "returned no video output."
-            )
+                print(
+                    f"Video saved: {output_path}"
+                )
+                print(
+                    f"Video size: {file_size:.2f} MB"
+                )
+                print()
 
-        video_url = task.output[0]
+                print("=" * 60)
+                print(
+                    "AI VIDEO GENERATION COMPLETE"
+                )
+                print("=" * 60)
+                print()
 
-        print()
-        print(
-            "AI video generated successfully."
-        )
+                return output_path
 
-        print(
-            "Video URL received."
-        )
+            except TaskFailedError as exc:
 
-        print(
-            "Downloading video..."
-        )
+                last_exception = exc
 
-        print()
+                print()
+                print(
+                    f"Runway attempt {attempt_number} failed."
+                )
+                print()
+                print(exc)
 
-        urllib.request.urlretrieve(
-            video_url,
-            output_path,
-        )
+                if hasattr(
+                    exc,
+                    "task_details",
+                ):
+                    print()
+                    print(
+                        "Task details:",
+                        exc.task_details,
+                    )
 
-        if not output_path.exists():
+                if attempt_number < len(prompts):
 
-            raise RuntimeError(
-                "Video download failed."
-            )
+                    print()
+                    print(
+                        "Retrying with a simpler motion prompt..."
+                    )
+                    print()
 
-        file_size = (
-            output_path.stat().st_size
-            / (1024 * 1024)
-        )
+            except Exception as exc:
 
-        print(
-            f"Video saved: {output_path}"
-        )
+                last_exception = exc
 
-        print(
-            f"Video size: {file_size:.2f} MB"
-        )
+                print()
+                print(
+                    f"Runway attempt {attempt_number} "
+                    f"encountered an error:"
+                )
+                print(exc)
+
+                if attempt_number < len(prompts):
+
+                    print()
+                    print(
+                        "Retrying with a simpler motion prompt..."
+                    )
+                    print()
 
         print()
         print("=" * 60)
-        print(
-            "AI VIDEO GENERATION COMPLETE"
-        )
+        print("AI VIDEO GENERATION FAILED")
         print("=" * 60)
         print()
+        print(
+            "All Runway generation attempts failed."
+        )
+        print()
 
-        return output_path
+        if last_exception:
+            raise last_exception
+
+        raise RuntimeError(
+            "Runway video generation failed."
+        )

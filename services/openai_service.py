@@ -1,7 +1,9 @@
 from typing import Type, TypeVar, List
+import httpx
 
 from openai import OpenAI
 from pydantic import BaseModel
+from config.settings import VOICE_MODEL, VOICE_ASSIGNMENTS
 
 from config.settings import (
     AI_MODEL,
@@ -30,7 +32,12 @@ class OpenAIService:
             )
 
         self.client = OpenAI(
-            api_key=OPENAI_API_KEY
+            api_key=OPENAI_API_KEY,
+            timeout=httpx.Timeout(
+                300.0,
+            connect=30.0,
+            ),
+             max_retries=2,  
         )
 
         logger.info(
@@ -236,7 +243,11 @@ class OpenAIService:
         self,
         text: str,
         output_path,
+        voice: str = None,
+        instructions: str = None,
     ) -> str:
+
+        selected_voice = voice
 
         logger.info(
             "Sending text-to-speech request to OpenAI."
@@ -246,8 +257,9 @@ class OpenAIService:
 
             response = self.client.audio.speech.create(
                 model=VOICE_MODEL,
-                voice=VOICE_NAME,
+                voice=selected_voice,
                 input=text,
+                instructions=instructions,
             )
 
             response.write_to_file(

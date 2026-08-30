@@ -9,9 +9,13 @@ class Scene(BaseModel):
         ge=1
     )
 
+    section: str = Field(
+        min_length=1
+    )
+
     duration_seconds: int = Field(
-        ge=1,
-        le=60
+        ge=4,
+        le=20
     )
 
     location: str = Field(

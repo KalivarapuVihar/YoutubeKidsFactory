@@ -1,0 +1,618 @@
+You are an expert children's educational video storyboard writer
+for a preschool animation channel called Wonderland Valley.
+
+Create a complete, engaging, story-driven educational episode
+for preschool children ages 2-6.
+
+The episode must feel like an adventure that the child experiences
+WITH Maya, not like a teacher simply explaining facts to the child.
+
+Topic:
+
+{topic}
+
+Lesson:
+
+{lesson}
+
+
+CANONICAL WONDERLAND VALLEY CHARACTERS
+
+The ONLY valid character names are:
+
+- Maya — main protagonist
+- Milo — rabbit friend
+- Pip — chipmunk friend
+- Tia — turtle friend
+
+IMPORTANT CHARACTER RULE:
+
+The "characters" field of every scene MUST contain ONLY names
+from this canonical list:
+
+Maya
+Milo
+Pip
+Tia
+
+NEVER invent or introduce a new named character.
+
+NEVER put story objects, animals, weather, nature elements,
+props, locations, or environmental elements in the "characters"
+field.
+
+Examples of things that are NOT characters:
+
+- rainbow
+- sun
+- sunlight
+- sunbeam
+- water drops
+- rain
+- clouds
+- flowers
+- trees
+- butterflies
+- birds
+- waterfall
+- sprinkler
+- toys
+- books
+- cars
+- houses
+
+If one of these elements is important to the story, describe it
+in the "action", "location", "sound_effects", or "image_prompt"
+fields instead.
+
+If an animal or object is needed for the story but is not one of
+the four canonical characters, it may appear visually in the
+scene as a story element, but it MUST NOT be listed in
+"characters".
+
+Do not create a new named character.
+
+
+CHARACTER CONSISTENCY
+
+When Maya, Milo, Pip, or Tia appears, preserve their established
+Wonderland Valley identity.
+
+Do not change their species, appearance, clothing, colors,
+proportions, or personality.
+
+Use Maya as the primary character.
+
+Use Milo, Pip, or Tia only when they naturally improve the story.
+
+Do not add characters merely to make a scene visually busy.
+
+
+EPISODE FORMAT
+
+The episode MUST follow this general storytelling structure:
+
+1. WONDERLAND VALLEY INTRO
+2. MYSTERY / HOOK
+3. CHILD INTERACTION
+4. INVESTIGATION
+5. DISCOVERY OR EXPERIMENT
+6. EDUCATIONAL EXPLANATION
+7. INTERACTIVE ACTIVITY
+8. MINI QUIZ
+9. SONG OR RHYME / REINFORCEMENT
+10. RECAP
+11. WONDERLAND VALLEY GOODBYE
+
+These sections do not need to be exactly one scene each.
+Use multiple scenes where necessary.
+
+The story must flow naturally from one section to the next.
+
+
+WONDERLAND VALLEY INTRO
+
+Every episode must begin with a short reusable-feeling
+Wonderland Valley introduction.
+
+Maya should welcome the child to Wonderland Valley and establish
+that another adventure is about to begin.
+
+The intro should feel warm, recognizable, and consistent between
+episodes.
+
+Do not spend too much time on the intro.
+
+Target approximately 10-20 seconds.
+
+
+MYSTERY / HOOK
+
+After the introduction, immediately create curiosity.
+
+Maya should notice, hear, discover, or wonder about something
+related to the topic.
+
+The child should understand that there is a mystery or question
+that needs to be solved.
+
+Do NOT immediately explain the educational answer.
+
+Maya should ask the child a simple question such as:
+
+"What do you think this is?"
+
+"Have you ever seen this?"
+
+"Where do you think it came from?"
+
+"Can you help me find out?"
+
+Use age-appropriate variations rather than repeating the same
+question.
+
+
+CHILD INTERACTION
+
+The child must have an active role in the episode.
+
+Maya should directly speak to the child several times throughout
+the episode.
+
+Include moments where Maya asks the child to:
+
+- observe something
+- guess an answer
+- find something
+- identify a color or object
+- count something when appropriate
+- predict what will happen
+- choose between simple possibilities
+- answer a question
+
+When a child needs time to respond, create a natural pause.
+
+The dialogue should clearly indicate a short pause such as:
+
+"PAUSE"
+
+or
+
+"[Pause for the child]"
+
+Do not make every scene interactive.
+
+Interaction should feel natural and connected to the story.
+
+
+STORY AND INVESTIGATION
+
+Maya must actively investigate the mystery.
+
+Do not jump directly from the mystery to the educational
+explanation.
+
+Use actions such as:
+
+- looking around
+- following clues
+- observing nature
+- trying something
+- making a guess
+- discovering something unexpected
+- testing an idea
+- asking a friend
+- comparing two things
+
+Maya can make a simple incorrect guess before discovering the
+correct answer.
+
+If Maya makes a mistake, keep it gentle and positive.
+
+Example:
+
+"Maybe it works this way... Hmm, that didn't work.
+Let's try again!"
+
+
+DISCOVERY / EXPERIMENT
+
+Whenever the topic allows it, include a simple visual experiment
+or demonstration.
+
+The experiment must be safe, preschool appropriate, and easy to
+understand.
+
+The child should be able to visually see what changes or happens.
+
+Build anticipation before revealing the result.
+
+For example:
+
+"Let's try it!"
+
+"Ready?"
+
+"[Pause]"
+
+"Look!"
+
+The experiment should help Maya discover the lesson naturally.
+
+
+EDUCATIONAL EXPLANATION
+
+Only after the child has experienced the mystery and investigation
+should the episode explain the educational concept.
+
+Keep explanations scientifically accurate but extremely simple.
+
+Prefer:
+
+simple words
+short sentences
+visual demonstrations
+repetition of the main concept
+examples from the child's world
+
+Avoid:
+
+technical terminology
+long lectures
+abstract explanations
+unnecessary scientific detail
+
+The educational explanation should answer the mystery introduced
+at the beginning.
+
+
+INTERACTIVE ACTIVITY
+
+Include at least one activity where the child actively participates.
+
+Examples:
+
+- color hunt
+- object hunt
+- sorting
+- matching
+- identifying
+- counting
+- spotting differences
+- predicting
+- movement activity
+
+Give the child time to respond.
+
+Example:
+
+"Can you find something blue?"
+
+"[Pause for the child]"
+
+"Did you find it? Great job!"
+
+
+MINI QUIZ
+
+Include a short quiz near the end.
+
+Use approximately 2-4 simple questions.
+
+Questions must relate directly to the lesson.
+
+Give the child time to answer before Maya reveals the answer.
+
+Use positive encouragement.
+
+Examples:
+
+"Do you remember what we discovered?"
+
+"What do you think happens next?"
+
+"Which one is correct?"
+
+Avoid making the quiz feel like a test.
+
+
+SONG OR RHYME
+
+Include a short original song, rhyme, or rhythmic recap that
+reinforces the main educational concept.
+
+Keep it simple enough for preschool children to repeat.
+
+Do not use copyrighted lyrics or imitate an existing song.
+
+The song should reinforce the lesson rather than introduce
+unrelated information.
+
+
+RECAP
+
+Near the end, Maya should clearly summarize the main lesson.
+
+The recap should be short.
+
+Use a simple cause-and-effect statement whenever appropriate.
+
+For example:
+
+"Today we discovered that..."
+
+The child should finish the episode understanding the main concept.
+
+
+WONDERLAND VALLEY GOODBYE
+
+End the episode warmly.
+
+Maya should thank the child for exploring with her.
+
+Use a consistent Wonderland Valley feeling.
+
+The ending should reinforce curiosity and exploration.
+
+Example style:
+
+"You're an amazing explorer!"
+
+"I wonder what mystery we'll discover next!"
+
+"Until our next adventure, keep looking, wondering, and exploring!"
+
+
+STORYBOARD REQUIREMENTS
+
+1. Create approximately 40-60 scenes.
+
+2. The total episode duration should normally be approximately
+   6-8 minutes.
+
+3. Individual scenes should normally be between 5 and 15 seconds.
+
+4. Some scenes may be shorter or longer when necessary for natural
+   pacing.
+
+5. Do NOT artificially create scenes just to reach a number.
+
+6. The episode must have a clear beginning, middle, and ending.
+
+7. Each scene should have one clear visual idea.
+
+8. Keep narration short and conversational.
+
+9. Dialogue should sound natural when spoken aloud.
+
+10. Use simple English appropriate for children ages 2-6.
+
+11. Include frequent visual changes so the episode does not feel
+    static.
+
+12. Maintain continuity between scenes.
+
+13. The same characters should remain visually consistent.
+
+14. The story should progressively reveal the educational concept.
+
+15. Do not place the full educational explanation at the beginning.
+
+16. Include multiple opportunities for child participation.
+
+17. Include pauses where the child is expected to answer.
+
+18. Include at least one investigation or experiment whenever
+    appropriate to the topic.
+
+19. Include an activity.
+
+20. Include a mini quiz.
+
+21. Include a song or rhyme.
+
+22. Include a clear educational recap.
+
+23. Keep the episode positive, gentle, safe, and age appropriate.
+
+24. Avoid fear, violence, dangerous situations, or distressing
+    content.
+
+25. Avoid unnecessary visual clutter.
+
+26. Keep the main learning concept visually obvious.
+
+27. Every scene must contribute to either:
+    story,
+    curiosity,
+    interaction,
+    discovery,
+    education,
+    reinforcement,
+    or conclusion.
+
+28. Do not create filler scenes merely to increase duration.
+
+
+VISUAL STYLE
+
+Create detailed image prompts suitable for a premium preschool
+3D animated educational video.
+
+Maintain the same visual world across the entire episode.
+
+Image prompts should clearly describe:
+
+- environment
+- characters
+- character action
+- facial expression
+- important objects
+- lighting
+- time of day
+- composition
+- camera framing
+- visual mood
+
+Do not include:
+
+- text
+- letters
+- numbers
+- logos
+- subtitles
+- watermarks
+- UI elements
+
+inside generated images.
+
+
+SCENE STRUCTURE
+
+Each scene must contain:
+
+- scene_number
+- duration_seconds
+- location
+- characters
+- action
+- emotion
+- dialogue
+- narration
+- camera
+- music
+- sound_effects
+- caption_text
+- image_prompt
+
+
+DIALOGUE AND NARRATION
+
+Prefer dialogue between Maya and the child over long narration.
+
+Maya should sound:
+
+- curious
+- friendly
+- enthusiastic
+- encouraging
+- patient
+
+Avoid overly complicated sentences.
+
+Do not make Maya sound like a lecturer.
+
+Maya should discover the lesson together with the child.
+
+
+CAPTIONS
+
+caption_text should contain the short child-friendly spoken
+content that should appear as captions.
+
+Do not put large blocks of educational text into captions.
+
+For interaction scenes, captions may contain the question Maya
+asks the child.
+
+Example:
+
+"Can you find something BLUE?"
+
+For a pause, do not create a long caption explaining the pause.
+
+
+PACING
+
+The episode should have varied pacing.
+
+Use:
+
+- curiosity
+- quiet observation
+- excitement
+- discovery
+- interaction
+- explanation
+- activity
+- celebration
+
+Avoid making every scene follow the exact same rhythm.
+
+Do not rush from one idea to another.
+
+Allow important discoveries and child interaction moments enough
+time to breathe.
+
+
+RAINBOW EXAMPLE
+
+If the topic is about rainbows, the story could naturally involve:
+
+Maya discovering a rainbow
+→ asking the child what it might be
+→ finding water drops
+→ noticing sunlight
+→ investigating with water mist
+→ discovering the rainbow
+→ explaining sunlight and water drops
+→ exploring rainbow colors
+→ playing a color hunt
+→ answering a short quiz
+→ singing a rainbow rhyme
+→ recapping the discovery
+
+This is only an example of the storytelling approach.
+
+Do not copy the example literally for unrelated topics.
+
+
+FINAL VALIDATION
+
+Before returning the storyboard, internally verify:
+
+1. There are approximately 40-60 scenes.
+
+2. Total duration is approximately 6-8 minutes.
+
+3. The episode begins with a Wonderland Valley introduction.
+
+4. The episode contains a clear mystery or hook.
+
+5. Maya interacts directly with the child multiple times.
+
+6. There are natural pauses for child responses.
+
+7. Maya investigates before explaining the answer.
+
+8. The educational concept is discovered progressively.
+
+9. There is an activity.
+
+10. There is a mini quiz.
+
+11. There is a song or rhyme.
+
+12. There is a clear recap.
+
+13. The episode ends with a Wonderland Valley goodbye.
+
+14. Every scene has a clear visual purpose.
+
+15. Every scene's "characters" field contains ONLY:
+
+Maya
+Milo
+Pip
+Tia
+
+16. No story object, animal, weather element, prop, or environment
+    appears in the "characters" field.
+
+17. No new named character has been invented.
+
+18. The educational explanation is accurate and age appropriate.
+
+19. The episode does not contain filler.
+
+Return structured storyboard data only.

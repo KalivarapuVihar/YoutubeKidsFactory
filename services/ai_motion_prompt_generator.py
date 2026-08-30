@@ -7,71 +7,53 @@ class AIMotionPromptGenerator:
     def generate(scene: Scene) -> str:
 
         characters = ", ".join(scene.characters)
+        duration = scene.duration_seconds
 
-        prompt = f"""
-Preserve the exact characters, appearance, clothing,
-colors, proportions, environment, lighting and preschool
-3D animation style of the input image.
+        prompt = (
+            f"Preserve the exact characters, appearance, clothing, "
+            f"colors, proportions, environment, objects and preschool "
+            f"3D style of the input image.\n\n"
 
-Animate this scene naturally for 5 seconds.
+            f"Animate this scene naturally for {duration} seconds.\n\n"
 
-CHARACTERS:
-{characters}
+            f"CHARACTERS: {characters}\n"
+            f"ACTION: {scene.action}\n"
+            f"EMOTION: {scene.emotion}\n"
+            f"CAMERA: {scene.camera}\n\n"
 
-ACTION:
-{scene.action}
+            "MOTION DIRECTION:\n"
+            "The animation must visually perform the described action. "
+            "Do not substitute unrelated movements. "
+            "Character gestures should correspond to what the scene "
+            "is communicating. "
+            "When characters count, point toward or interact with each "
+            "counted object in sequence. "
+            "When an object is added, removed, moved or discovered, "
+            "show that action clearly. "
+            "When a character asks the viewer a question, have the "
+            "character face or gesture toward the viewer and allow a "
+            "brief natural thinking moment. "
+            "When a character discovers something, use an appropriate "
+            "reaction such as looking, pointing, leaning closer or "
+            "showing gentle surprise.\n\n"
 
-EMOTION:
-{scene.emotion}
+            "IMPORTANT MOTION RULES:\n"
+            "- Keep all original characters consistent.\n"
+            "- Animate characters continuously during active moments.\n"
+            "- Use visible body and facial movement appropriate to the action.\n"
+            "- Keep movement gentle and preschool-friendly.\n"
+            "- Keep faces, hands, limbs, bodies and identity stable.\n"
+            "- Do not morph, duplicate or remove characters.\n"
+            "- Do not create extra limbs or distorted hands.\n"
+            "- Do not add unrelated objects.\n"
+            "- Do not remove or duplicate educational objects.\n"
+            "- Preserve the original environment.\n"
+            "- Preserve the original composition.\n"
+            "- Keep important objects visible when they are being discussed.\n"
+            "- No text, logos or watermark."
+        ).strip()
 
-MOTION:
-Make the characters perform the described action with
-smooth, gentle and believable preschool-friendly movement.
-Keep faces, hands, arms, legs and bodies stable.
-No character deformation, morphing, duplication or identity changes.
-
-ENVIRONMENT:
-Add only subtle natural movement such as a gentle breeze,
-grass movement, small water movement or soft particles.
-Keep the rainbow and important background elements stable.
-
-CAMERA:
-{scene.camera}
-Use only a gentle, stable camera movement.
-
-Keep the original composition and main subjects clearly visible.
-Do not introduce new characters or objects.
-
-No text, letters, numbers, logos or watermark.
-""".strip()
-
-        # Runway promptText maximum is 1000 characters.
-        if len(prompt) > 950:
-            prompt = (
-                f"Preserve the exact characters, appearance, "
-                f"clothing, colors, proportions and preschool "
-                f"3D style of the input image. "
-                f"Animate naturally for 5 seconds.\n\n"
-                f"Characters: {characters}\n"
-                f"Action: {scene.action}\n"
-                f"Emotion: {scene.emotion}\n\n"
-                f"Make the characters perform the action with "
-                f"smooth gentle movement. Keep faces, hands, "
-                f"limbs and bodies stable. No deformation, "
-                f"morphing, duplication or identity changes.\n\n"
-                f"Add only subtle environmental movement. "
-                f"Keep important background elements stable.\n"
-                f"Camera: {scene.camera}\n\n"
-                f"Keep the original composition. "
-                f"No new characters or objects. "
-                f"No text, logos or watermark."
-            ).strip()
-
-        # Final safety check.
         if len(prompt) > 1000:
-            raise ValueError(
-                f"Runway motion prompt is too long: "
-                f"{len(prompt)} characters"
-            )
+            prompt = prompt[:997].rstrip() + "..."
 
         return prompt

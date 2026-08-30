@@ -6,6 +6,9 @@ from services.storyboard_generator import StoryboardGenerator
 from services.image_generator import ImageGenerator
 from services.voice_generator import VoiceGenerator
 from services.video_renderer import VideoRenderer
+from services.ai_motion_prompt_generator import AIMotionPromptGenerator
+from services.ai_video_generator import AIVideoGenerator
+from services.motion_video_compositor import MotionVideoCompositor
 from services.character_manager import CharacterManager
 from utils.caption_generator import CaptionGenerator
 from services.youtube_metadata_generator import (
@@ -112,6 +115,9 @@ def main():
     voice_generator = VoiceGenerator(
         ai_service
     )
+    motion_video_generator = AIVideoGenerator(
+        model="gen4_turbo"
+    )
 
     youtube_metadata_generator = (
         YouTubeMetadataGenerator(
@@ -204,7 +210,7 @@ def main():
         storyboard = (
             storyboard_generator.generate(
                 topic=lesson.topic,
-                lesson=lesson.introduction,
+                lesson=lesson.model_dump_json(),
             )
         )
 
@@ -212,16 +218,17 @@ def main():
             run.storyboard_path,
             storyboard.model_dump()
         )
+   
+    
+    run.update_metadata(
+        status="storyboard_completed",
+        scenes=len(storyboard.scenes),
+    )
 
-        run.update_metadata(
-            status="storyboard_completed",
-            scenes=len(storyboard.scenes),
-        )
-
-        print(
-            f"Storyboard generated with "
-            f"{len(storyboard.scenes)} scenes."
-        )
+    print(
+        f"Storyboard ready with "
+        f"{len(storyboard.scenes)} scenes."
+    )
 
     # ---------------------------------
     # Images + Voice
@@ -437,6 +444,11 @@ def main():
                 "Creating final video..."
             )
 
+        # ---------------------------------
+        # Create final video
+        # ---------------------------------
+        # Branding intro is inserted exactly once
+        # inside VideoRenderer.concatenate_videos().
         VideoRenderer.concatenate_videos(
             video_paths=video_paths,
             output_path=run.final_video_path,
@@ -972,4 +984,20 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        print()
+        print()
+        print("=" * 60)
+        print("PIPELINE STOPPED BY USER")
+        print("=" * 60)
+        print()
+        print(
+            "Your existing assets have been preserved."
+        )
+        print(
+            "Run the pipeline again to resume "
+            "from the next missing asset."
+        )
+        print()

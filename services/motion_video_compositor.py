@@ -6,6 +6,7 @@ class MotionVideoCompositor:
 
     @staticmethod
     def get_duration(path: Path) -> float:
+
         result = subprocess.run(
             [
                 "ffprobe",
@@ -66,68 +67,102 @@ class MotionVideoCompositor:
         print(
             f"Motion: {motion_duration:.3f}s"
         )
+
         print(
             f"Voice:  {voice_duration:.3f}s"
         )
 
-        # If voice is longer than the generated
-        # motion clip, freeze the final video frame
-        # for the remaining duration.
+        # -------------------------------------------------
+        # Voice is the master timeline.
+        #
+        # We NEVER freeze the final frame anymore.
+        #
+        # If voice is longer than the Runway clip,
+        # loop the motion clip so characters continue moving.
+        #
+        # If voice is shorter, trim the motion to the voice.
+        # -------------------------------------------------
+
         if voice_duration > motion_duration:
 
-            extra = (
-                voice_duration - motion_duration
-            )
-
             print(
-                f"Extending final frame by "
-                f"{extra:.3f}s"
+                "Voice is longer than motion. "
+                "Looping motion instead of freezing frame."
             )
 
             filter_complex = (
-                f"[0:v]tpad=stop_mode=clone:"
-                f"stop_duration={extra:.3f},"
+                f"[0:v]"
+                f"loop="
+                f"loop=-1:"
+                f"size=32767:"
+                f"start=0,"
+                f"setpts=N/FRAME_RATE/TB,"
                 f"trim=duration={voice_duration:.3f},"
                 f"setpts=PTS-STARTPTS[v]"
             )
 
         else:
 
+            print(
+                "Motion is longer than voice. "
+                "Trimming motion to voice duration."
+            )
+
             filter_complex = (
-                f"[0:v]trim=duration={voice_duration:.3f},"
+                f"[0:v]"
+                f"trim=duration={voice_duration:.3f},"
                 f"setpts=PTS-STARTPTS[v]"
             )
 
         command = [
             "ffmpeg",
             "-y",
+
             "-i",
             str(motion_path),
+
             "-i",
             str(voice_path),
+
             "-filter_complex",
             filter_complex,
+
             "-map",
             "[v]",
+
             "-map",
             "1:a",
+
             "-c:v",
             "libx264",
+
             "-preset",
             "medium",
+
             "-crf",
             "20",
+
             "-pix_fmt",
             "yuv420p",
+
             "-c:a",
             "aac",
+
             "-b:a",
             "128k",
+
             "-ar",
             "24000",
+
             "-ac",
             "1",
-            "-shortest",
+
+            "-t",
+            f"{voice_duration:.3f}",
+
+            "-movflags",
+            "+faststart",
+
             str(output_path),
         ]
 
@@ -137,6 +172,7 @@ class MotionVideoCompositor:
         )
 
         if not output_path.exists():
+
             raise RuntimeError(
                 f"Failed to create scene video: "
                 f"{output_path}"
